@@ -1,0 +1,20 @@
+networks:
+  dbwebb:
+
+services:
+  server:
+    image: "emelieklund/vteam-server:1.0"
+    container_name: "server"
+    ports:
+      - "1337:1337"
+    networks:
+      dbwebb:
+    volumes:
+      - "./data/:/data/"
+    restart:
+      "always"
+  client:
+    image: "emelieklund/vteam-client:1.0"
+    container_name: "client"
+    networks:
+      dbwebb:
