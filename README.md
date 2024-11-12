@@ -14,3 +14,7 @@ docker pull emelieklund/vteam-client:1.0
 ```
 docker compose up client
 ```
+4. To stop the system, enter:
+```
+docker compose down client
+```
