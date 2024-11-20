@@ -16,7 +16,7 @@ docker pull emelieklund/vteam-server:1.0
 ```
 docker compose up -d server
 ```
-6. Open up your browser with (http://localhost:1337){:target="_blank"}
+6. Open up your browser with http://localhost:1337
 7. To stop the system, enter:
 ```
 docker compose down server
