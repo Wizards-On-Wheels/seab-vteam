@@ -16,5 +16,9 @@ services:
   client:
     image: "emelieklund/vteam-client:1.0"
     container_name: "client"
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./client/:/client/"
     networks:
       dbwebb:
