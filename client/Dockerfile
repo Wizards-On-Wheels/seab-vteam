@@ -1,9 +1,13 @@
-FROM ubuntu:24.04
+FROM node:18-alpine
 
 WORKDIR /client
 
-COPY vteam.bash .
+COPY package*.json ./
+COPY public/ ./public/
+COPY src/ ./src/
 
-RUN chmod +x ./vteam.bash
+RUN npm install
 
-CMD ["bash", "vteam.bash"]
+EXPOSE 3000
+
+CMD ["npm", "start"]
