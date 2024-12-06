@@ -1,6 +1,6 @@
 # seab-vteam
 
-Start up system with docker
+Start up system with Docker
 ---------------------------
 
 To start up the system, follow the steps below:
@@ -17,16 +17,10 @@ docker pull emelieklund/vteam-client:1.0
 ```
 5. Start the system by entering:
 ```
-docker compose up -d server
-```
-```
-docker compose up client
+docker compose up -d server client
 ```
 6. Open up http://localhost:3000
 7. To stop the system, enter:
 ```
-docker compose down client
-```
-```
-docker compose down server
+docker compose down client server
 ```
