@@ -11,7 +11,7 @@
     "format:fix": "prettier --write --ignore-path .gitignore --list-different ."
   },
   "dependencies": {
-    "next": "^14.2.20",
+    "next": "^15.1.0",
     "react": "^18",
     "react-dom": "^18"
   },
