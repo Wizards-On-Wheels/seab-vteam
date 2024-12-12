@@ -10,9 +10,7 @@ services:
     networks:
       dbwebb:
     volumes:
-      - "./data/:/data/"
-    restart:
-      "always"
+      - "./server/:/server/"
   client:
     image: "emelieklund/vteam-client:1.0"
     container_name: "client"
