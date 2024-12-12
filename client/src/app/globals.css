@@ -70,3 +70,27 @@ input[type=submit] {
 input[type=submit]:hover {
   background-color: #343434;
 }
+
+@media (max-width: 768px) {
+  main {
+      padding: 16px;
+      justify-content: flex-start;
+  }
+  h1 {
+    font-size: x-large;
+  }
+  .hamburger {
+    max-height: 40px;
+  }
+  body {
+    background-color: #F3E4E1;
+    color: #2F2926;
+  }
+  .menu-open {
+    background-color: #2F2926;
+    color: #FFFFFF
+  }
+  .profile{
+    background: #2F2926;
+  }
+}
