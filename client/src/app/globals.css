@@ -26,10 +26,6 @@ body {
   }
 }
 
-h1 {
-  font-size: 4em;
-}
-
 .temporary-links {
   width: 450px;
   display: flex;
