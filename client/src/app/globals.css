@@ -83,6 +83,10 @@ input[type=submit]:hover {
     background-color: #F3E4E1;
     color: #2F2926;
   }
+  .cart-open {
+    background-color: #F3E4E1;
+    color: #2F2926
+  }
   .menu-open {
     background-color: #2F2926;
     color: #FFFFFF

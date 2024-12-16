@@ -17,6 +17,7 @@
     "@nextui-org/system": "^2.4.4",
     "@nextui-org/table": "^2.2.6",
     "@nextui-org/theme": "^2.4.3",
+    "@types/google.maps": "^3.58.1",
     "framer-motion": "^11.14.3",
     "next": "^15.1.0",
     "react": "^18",

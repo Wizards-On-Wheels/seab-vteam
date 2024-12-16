@@ -1,5 +1,8 @@
+"use client";
+import { useState } from "react";
 import HamburgerMenu from "../components/HamburgerMenu";
-import PriceInfo from "../components/PriceInfo"; // Note the corrected name
+import PriceInfo from "../components/PriceInfo"; 
+import CartMenu from "../components/Payment";
 
 const links = [
   { label: "Börja Åka!", href: "/" },
@@ -7,7 +10,6 @@ const links = [
   { label: "Min Profil", href: "/profile" },
   { label: "Priser Och Åkpass", href: "/price" },
 ];
-
 
 const priceInfoArray = [
   { title: "Fri upplåsning", unlock: "0kr/upplåsning", price: 24.5, minutprice: "2.5 kr/minut" },
@@ -19,14 +21,50 @@ const priceInfoArray = [
 ];
 
 export default function Info() {
+  const [cart, setCart] = useState<{ title: string; price: number; amount: number }[]>([]);
+
+  const addToCart = (item: { title: string; price: number }) => {
+    setCart((prev) => {
+      const existingItem = prev.find((i) => i.title === item.title);
+      if (existingItem) {
+        return prev.map((i) =>
+          i.title === item.title ? { ...i, amount: i.amount + 1 } : i
+        );
+      }
+      return [...prev, { ...item, amount: 1 }];
+    });
+  };
+
+  // Functions to increase or decrease the item amount in the cart
+  const increaseAmount = (index: number) => {
+    setCart((prev) =>
+      prev.map((cartItem, i) =>
+        i === index ? { ...cartItem, amount: cartItem.amount + 1 } : cartItem
+      )
+    );
+  };
+
+  const decreaseAmount = (index: number) => {
+    setCart((prev) =>
+      prev.map((cartItem, i) =>
+        i === index && cartItem.amount > 0
+          ? { ...cartItem, amount: cartItem.amount - 1 }
+          : cartItem
+      )
+    );
+  };
+
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-       
-       <div className="flex justify-between">  <HamburgerMenu links={links} /> <img className="h-[60px]" src="/images/scooterriding.png" alt="Our Logo" /> <img className="h-[70px] fixed top-0 right-0" src="/images/shop.png" alt="Shopping Cart" /> </div>
-      <main className="row-start-2 flex flex-col items-center gap-8 sm:items-start">
-        <h1> Priser och Åkpass</h1>
+    <div className="grid min-h-screen items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
+      <div className="flex justify-between">
+        <HamburgerMenu links={links} />
+        <img className="h-[60px]" src="/images/scooterriding.png" alt="Our Logo" />
+        <CartMenu cartItems={cart} increaseAmount={increaseAmount} decreaseAmount={decreaseAmount} /> {/* Pass functions to CartMenu */}
+      </div>
+      <main className="row-start-2 flex flex-col items-center sm:items-start">
+        <h1>Priser och Åkpass</h1>
         {priceInfoArray.map((price, index) => (
-          <PriceInfo key={index} price={price} />
+          <PriceInfo key={index} price={price} addToCart={addToCart} />
         ))}
       </main>
       <footer className="row-start-3 flex flex-wrap items-center justify-center gap-6">

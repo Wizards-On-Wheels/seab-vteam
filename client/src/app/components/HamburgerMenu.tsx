@@ -15,7 +15,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ links }) => {
   return (
     <div>
       {/* Hamburger Button (Visible on top) */}
-      <div className="fixed top-3 left-3 z-50 bg-white rounded-full p-2 max-h-[40px]">
+      <div className="fixed top-5 left-5 z-50 bg-white rounded-full p-2 max-h-[40px]">
         <button
           onClick={toggleMenu}
           className="text-gray-800 rounded-md mt-[2px]"
@@ -23,18 +23,18 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ links }) => {
         >
           <div className="space-y-1">
             <div
-              className={`h-1 w-6 bg-gray-800 transition-all ${
+              className={`h-1 w-6 bg-gray-800 transition-all rounded-full ${
                 isOpen ? "rotate-45 translate-y-2" : ""
               }`}
             ></div>
             <div
-              className={`h-1 w-6 bg-gray-800 transition-all ${
+              className={`h-1 w-6 bg-gray-800 transition-all rounded-full ${
                 isOpen ? "opacity-0" : ""
               }`}
             ></div>
             <div
               className={`h-1 w-6 bg-gray-800 transition-all ${
-                isOpen ? "-rotate-45 -translate-y-2" : ""
+                isOpen ? "-rotate-45 -translate-y-2 rounded-full" : "rounded-full"
               }`}
             ></div>
           </div>
