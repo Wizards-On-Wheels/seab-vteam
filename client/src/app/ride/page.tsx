@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import HamburgerMenu from "../components/HamburgerMenu";
-import Map from "../components/Map";
+import BikeMap from "../components/Map";
 
 
 const links = [
@@ -20,8 +20,8 @@ export default function Info() {
       <div className="">
       <HamburgerMenu links={links} />
       </div>
-      <main className="">
-      <Map />
+      <main className="p-0 z-30">
+      <BikeMap />
         
       </main>
     </div>

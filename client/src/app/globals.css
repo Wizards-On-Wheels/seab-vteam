@@ -94,4 +94,16 @@ input[type=submit]:hover {
   .profile{
     background: #2F2926;
   }
+  .leaflet-control-container{
+    opacity: 0;
+  }
+  .leaflet-popup-tip-container {
+    opacity: 0;
+  }
+  /* .leaflet-popup-content-wrapper {
+    width: 100vw;
+    position: fixed;
+    height: 20vh;
+    background-color: #F3E4E1;
+  } */
 }
