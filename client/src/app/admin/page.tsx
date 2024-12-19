@@ -2,19 +2,28 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className='grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20'>
+    <div className='grid min-h-screen grid-rows-[auto_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20'>
       <div className='flex flex-col items-center gap-4'>
         <h1 className='text-4xl'>Svenska Elsparkcyklar AB</h1>
         <h2 className='text-2xl font-semibold'>Admin</h2>
         <div className='flex gap-4 mt-4'>
-          <Link href="/admin-cyklar" className='px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600'>
-            Cyklar
+          <Link href="/admin/cyklar">
+            <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 border-solid border-2 border-blue-500 py-4 hover:bg-blue-100 transition-colors'>
+              <span className='text-2xl'>🚲</span> {/* Optional Icon */}
+              Cyklar
+            </div>
           </Link>
-          <Link href="/admin-användare" className='px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600'>
-            Användare
+          <Link href="/admin/anvandare">
+            <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 border-solid border-2 border-green-500 py-4 hover:bg-green-100 transition-colors'>
+              <span className='text-2xl'>👤</span> {/* Optional Icon */}
+              Användare
+            </div>
           </Link>
-          <Link href="/admin-laddstationer" className='px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600'>
-            Laddstationer
+          <Link href="/admin/laddstationer">
+            <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 border-solid border-2 border-purple-500 py-4 hover:bg-purple-100 transition-colors'>
+              <span className='text-2xl'>⚡</span> {/* Optional Icon */}
+              Laddstationer
+            </div>
           </Link>
         </div>
       </div>
@@ -24,5 +33,5 @@ export default function Home() {
         A project by Wizards on Wheels
       </footer>
     </div>
-  )
+  );
 }
