@@ -7,22 +7,22 @@ export default function Home() {
         <h1 className='text-4xl'>Svenska Elsparkcyklar AB</h1>
         <h2 className='text-2xl font-semibold'>Admin</h2>
         <div className='flex gap-4 mt-4'>
-          <Link href="/admin/cyklar">
+          <Link href="/admin/bikes">
             <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 border-solid border-2 border-blue-500 py-4 hover:bg-blue-100 transition-colors'>
               <span className='text-2xl'>🚲</span> {/* Optional Icon */}
               Cyklar
             </div>
           </Link>
-          <Link href="/admin/anvandare">
+          <Link href="/admin/users">
             <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 border-solid border-2 border-green-500 py-4 hover:bg-green-100 transition-colors'>
               <span className='text-2xl'>👤</span> {/* Optional Icon */}
               Användare
             </div>
           </Link>
-          <Link href="/admin/laddstationer">
+          <Link href="/admin/cities">
             <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 border-solid border-2 border-purple-500 py-4 hover:bg-purple-100 transition-colors'>
               <span className='text-2xl'>⚡</span> {/* Optional Icon */}
-              Laddstationer
+              Städer
             </div>
           </Link>
         </div>
