@@ -2,6 +2,7 @@
 
 import React from "react";
 import BikeTable from "../../components/AdminBikeTable";
+import Link from "next/link";
 
 export default function AdminCyklar() {
   const bikeData = [
@@ -24,6 +25,13 @@ export default function AdminCyklar() {
       {/* Header */}
       <div className="flex flex-col items-center gap-4">
         <h2 className="text-2xl font-semibold">Cykelhantering för Admin</h2>
+        
+        {/* Back to Admin Button */}
+        <Link href="/admin">
+          <button className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            Back
+          </button>
+        </Link>
       </div>
 
       {/* BikeTable */}

@@ -1,83 +1,82 @@
 "use client";
 
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-} from "@nextui-org/table";
+import React, { useEffect, useState } from "react";
+import CityTable from "../../components/CityTable";
+import Link from "next/link";
 
-export default function AdminLaddstationer() {
-  const columns = [
-    {
-      key: "id",
-      label: "STATION ID",
-    },
-    {
-      key: "location",
-      label: "PLATS",
-    },
-    {
-      key: "totalSlots",
-      label: "TOTALA PLATSER",
-    },
-    {
-      key: "availableSlots",
-      label: "LEDIGA PLATSER",
-    },
-    {
-      key: "status",
-      label: "STATUS",
-    },
-  ];
+// Define types for City and ParkingLocation
+type ParkingLocation = {
+  status: string;
+  registered: string;
+  address: string;
+  longitude: number;
+  latitude: number;
+  charging_station: boolean;
+  maintenance: boolean;
+};
+
+type City = {
+  _id: string;
+  city: string;
+  city_registered: string;
+  status: string;
+  parking_locations: ParkingLocation[];
+};
+
+export default function CitiesPage() {
+  const [cities, setCities] = useState<City[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [expandedCityId, setExpandedCityId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:1337/admin/collections/cities/data"
+        );
+        if (!response.ok) throw new Error("Failed to fetch cities.");
+        const data: City[] = await response.json();
+        setCities(data);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unknown error occurred.");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCities();
+  }, []);
+
+  const toggleCityExpand = (cityId: string) => {
+    setExpandedCityId((prevId) => (prevId === cityId ? null : cityId));
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='grid min-h-screen grid-rows-[200px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20'>
-      {/* Page Header */}
-      <div className='flex flex-col items-center gap-4'>
-        <h2 className='text-2xl font-semibold'>Laddstationhantering för Admin</h2>
+    <div className="p-8">
+      <h2 className="text-2xl font-semibold mb-4 text-center">City Management</h2>
 
-        {/* Table for displaying charging station details */}
-        <Table aria-label="Charging station management table">
-          <TableHeader columns={columns}>
-            {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-          </TableHeader>
-          <TableBody>
-            <TableRow key="1">
-              <TableCell>STN001</TableCell>
-              <TableCell>Stockholm Central</TableCell>
-              <TableCell>20</TableCell>
-              <TableCell>5</TableCell>
-              <TableCell>Aktiv</TableCell>
-            </TableRow>
-            <TableRow key="2">
-              <TableCell>STN002</TableCell>
-              <TableCell>Göteborg Centrum</TableCell>
-              <TableCell>15</TableCell>
-              <TableCell>2</TableCell>
-              <TableCell>Underhåll</TableCell>
-            </TableRow>
-            <TableRow key="3">
-              <TableCell>STN003</TableCell>
-              <TableCell>Malmö Station</TableCell>
-              <TableCell>25</TableCell>
-              <TableCell>10</TableCell>
-              <TableCell>Aktiv</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+      {/* Back to Admin Button */}
+      <div className="text-center mb-4">
+        <Link href="/admin">
+          <button className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            Back
+          </button>
+        </Link>
       </div>
 
-      {/* Main Content */}
-      <main className='row-start-2 flex flex-col items-center gap-8 sm:items-start'>
-      </main>
-
-      {/* Footer */}
-      <footer className='row-start-3 flex flex-wrap items-center justify-center gap-6'>
-        A project by Wizards on Wheels
-      </footer>
+      <CityTable
+        cities={cities}
+        expandedCityId={expandedCityId}
+        toggleCityExpand={toggleCityExpand}
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import UserTable from "../../components/UserTable";
+import Link from "next/link";
 
 type User = {
   _id: string;
@@ -51,6 +52,15 @@ export default function AdminAnvandare() {
       {/* Title */}
       <div className="flex flex-col items-center gap-4">
         <h2 className="text-2xl font-semibold">Användarhantering för Admin</h2>
+      </div>
+
+      {/* Back to Admin Button */}
+      <div className="text-center mb-4">
+        <Link href="/admin">
+          <button className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            Back
+          </button>
+        </Link>
       </div>
 
       {/* UserTable Wrapper */}
