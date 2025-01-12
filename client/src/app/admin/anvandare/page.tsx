@@ -1,81 +1,65 @@
 "use client";
 
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-} from "@nextui-org/table";
+import { useEffect, useState } from "react";
+import UserTable from "../../components/UserTable";
+
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  prepaid_balance: number;
+};
 
 export default function AdminAnvandare() {
-  const columns = [
-    {
-      key: "id",
-      label: "ANVÄNDAR ID",
-    },
-    {
-      key: "name",
-      label: "NAMN",
-    },
-    {
-      key: "email",
-      label: "E-POST",
-    },
-    {
-      key: "status",
-      label: "STATUS",
-    },
-    {
-      key: "created",
-      label: "SKAPAD",
-    },
-  ];
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const BASEURL = "http://localhost:1337";
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(`${BASEURL}/admin/collections/users/data`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const filteredData: User[] = data.filter(
+          (user: any) => user.email && user.prepaid_balance !== undefined
+        );
+        setUsers(filteredData);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unknown error occurred");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='grid min-h-screen grid-rows-[200px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20'>
-      {/* Page Header */}
-      <div className='flex flex-col items-center gap-4'>
-        <h2 className='text-2xl font-semibold'>Användarhantering för Admin</h2>
-
-        {/* Table for displaying user details */}
-        <Table aria-label="User management table">
-          <TableHeader columns={columns}>
-            {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-          </TableHeader>
-          <TableBody>
-            <TableRow key="1">
-              <TableCell>USR001</TableCell>
-              <TableCell>Anna Svensson</TableCell>
-              <TableCell>anna.svensson@example.com</TableCell>
-              <TableCell>Aktiv</TableCell>
-              <TableCell>2024-01-15</TableCell>
-            </TableRow>
-            <TableRow key="2">
-              <TableCell>USR002</TableCell>
-              <TableCell>Erik Johansson</TableCell>
-              <TableCell>erik.johansson@example.com</TableCell>
-              <TableCell>Avstängd</TableCell>
-              <TableCell>2024-02-10</TableCell>
-            </TableRow>
-            <TableRow key="3">
-              <TableCell>USR003</TableCell>
-              <TableCell>Karin Karlsson</TableCell>
-              <TableCell>karin.karlsson@example.com</TableCell>
-              <TableCell>Aktiv</TableCell>
-              <TableCell>2024-03-05</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+    <div className="flex flex-col items-center gap-6 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
+      {/* Title */}
+      <div className="flex flex-col items-center gap-4">
+        <h2 className="text-2xl font-semibold">Användarhantering för Admin</h2>
       </div>
 
-      {/* Main Content */}
-      <main className='row-start-2 flex flex-col items-center gap-8 sm:items-start'>
-      </main>
+      {/* UserTable Wrapper */}
+      <div className="w-full max-w-5xl mt-4">
+        <UserTable data={users} />
+      </div>
 
       {/* Footer */}
-      <footer className='row-start-3 flex flex-wrap items-center justify-center gap-6'>
+      <footer className="mt-8 flex flex-wrap items-center justify-center gap-6">
         A project by Wizards on Wheels
       </footer>
     </div>
