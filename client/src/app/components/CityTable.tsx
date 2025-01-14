@@ -30,18 +30,18 @@ type City = {
 type CityTableProps = {
   cities: City[];
   expandedCityId: string | null;
-  toggleCityExpand: (cityId: string) => void;
+  onToggleCityExpand: (cityId: string) => void;  // Use "onToggleCityExpand" here to match the prop name from `CitiesPage`
 };
 
 const CityTable: React.FC<CityTableProps> = ({
   cities,
   expandedCityId,
-  toggleCityExpand,
+  onToggleCityExpand,
 }) => {
   const columns = [
-    { key: "id", label: "CITY ID" },
-    { key: "city", label: "CITY NAME" },
-    { key: "city_registered", label: "REGISTERED DATE" },
+    { key: "id", label: "STADS ID" },
+    { key: "city", label: "STAD" },
+    { key: "city_registered", label: "REGISTRERAD" },
     { key: "status", label: "STATUS" },
   ];
 
@@ -54,7 +54,7 @@ const CityTable: React.FC<CityTableProps> = ({
         </TableHeader>
         <TableBody>
           {cities.map((city) => (
-            <TableRow key={city._id} onClick={() => toggleCityExpand(city._id)}>
+            <TableRow key={city._id} onClick={() => onToggleCityExpand(city._id)}>
               <TableCell>{city._id}</TableCell>
               <TableCell>{city.city}</TableCell>
               <TableCell>{city.city_registered}</TableCell>
@@ -67,7 +67,7 @@ const CityTable: React.FC<CityTableProps> = ({
       {/* Expanded Parking Locations Table */}
       {expandedCityId && (
         <div className="mt-8">
-          <h3 className="text-xl font-semibold mb-4">Parking Locations</h3>
+          <h3 className="text-xl font-semibold mb-4">Parkeringar</h3>
           {cities
             .filter((city) => city._id === expandedCityId)
             .map((city) => (
@@ -75,12 +75,12 @@ const CityTable: React.FC<CityTableProps> = ({
                 {city.parking_locations.length > 0 ? (
                   <Table aria-label="Parking Locations">
                     <TableHeader>
-                      <TableColumn>Address</TableColumn>
-                      <TableColumn>Registered</TableColumn>
+                      <TableColumn>Adress</TableColumn>
+                      <TableColumn>Registrerad</TableColumn>
                       <TableColumn>Status</TableColumn>
-                      <TableColumn>Charging Station</TableColumn>
-                      <TableColumn>Maintenance</TableColumn>
-                      <TableColumn>Coordinates</TableColumn>
+                      <TableColumn>Laddstation</TableColumn>
+                      <TableColumn>Reparation</TableColumn>
+                      <TableColumn>Koordinater</TableColumn>
                     </TableHeader>
                     <TableBody>
                       {city.parking_locations.map((location, index) => (
@@ -97,7 +97,7 @@ const CityTable: React.FC<CityTableProps> = ({
                   </Table>
                 ) : (
                   <div className="p-4 bg-gray-100 rounded-md">
-                    <p>No parking locations available for this city.</p>
+                    <p>Inga tillgängliga parkeringsplatser för denna staden.</p>
                   </div>
                 )}
               </div>
