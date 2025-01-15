@@ -39,7 +39,7 @@ export default function Home() {
           </Link>
           <Link href="/admin/cities">
             <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 bg-purple-500 py-4 hover:bg-purple-300 text-white transition-all rounded-lg'>
-              <span className='text-2xl'>⚡</span>
+              <span className='text-2xl'>🏙️</span>
               Städer
             </div>
           </Link>
