@@ -1,10 +1,12 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import AddParking from "../../components/AddParking";
 import RemoveParking from "../../components/RemoveParking";
 import CityTable from "../../components/CityTable";
+import AddSpeedZone from "../../components/AddSpeedZone";
+import RemoveSpeedZone from "../../components/RemoveSpeedZone"; // Import the RemoveSpeedZone component
 
 type City = {
   _id: string;
@@ -12,6 +14,7 @@ type City = {
   city_registered: string;
   status: string;
   parking_locations: any[];
+  speed_zones?: any[]; // Optional to accommodate cities without speed zones
 };
 
 export default function CitiesPage() {
@@ -20,7 +23,9 @@ export default function CitiesPage() {
   const [error, setError] = useState<string | null>(null);
   const [expandedCityId, setExpandedCityId] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showAddSpeedZoneForm, setShowAddSpeedZoneForm] = useState(false);
   const [showRemoveForm, setShowRemoveForm] = useState(false);
+  const [showRemoveSpeedZoneForm, setShowRemoveSpeedZoneForm] = useState(false); // New state
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -73,13 +78,47 @@ export default function CitiesPage() {
         >
           Ta bort parkering
         </button>
+        <button
+          onClick={() => setShowAddSpeedZoneForm(true)}
+          className="px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
+        >
+          Lägg till hastighetszon
+        </button>
+        <button
+          onClick={() => setShowRemoveSpeedZoneForm(true)} // Opens RemoveSpeedZone form
+          className="px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
+        >
+          Ta bort hastighetszon
+        </button>
       </div>
 
       {/* Add Parking Spot Form Modal */}
-      {showAddForm && <AddParking cities={cities} setCities={setCities} setShowAddForm={setShowAddForm} />}
+      {showAddForm && (
+        <AddParking cities={cities} setCities={setCities} setShowAddForm={setShowAddForm} />
+      )}
+
+      {/* Add Speed Zone Form Modal */}
+      {showAddSpeedZoneForm && (
+        <AddSpeedZone
+          cities={cities}
+          setCities={setCities}
+          setShowAddForm={setShowAddSpeedZoneForm} // Reusing setShowAddSpeedZoneForm
+        />
+      )}
 
       {/* Remove Parking Spot Form Modal */}
-      {showRemoveForm && <RemoveParking cities={cities} setCities={setCities} setShowRemoveForm={setShowRemoveForm} />}
+      {showRemoveForm && (
+        <RemoveParking cities={cities} setCities={setCities} setShowRemoveForm={setShowRemoveForm} />
+      )}
+
+      {/* Remove Speed Zone Form Modal */}
+      {showRemoveSpeedZoneForm && (
+        <RemoveSpeedZone
+          cities={cities}
+          setCities={setCities}
+          setShowRemoveForm={setShowRemoveSpeedZoneForm} // Reusing setShowRemoveSpeedZoneForm
+        />
+      )}
 
       {/* City Table */}
       <div className="overflow-x-auto">

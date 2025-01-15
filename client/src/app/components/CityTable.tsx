@@ -1,4 +1,3 @@
-// components/CityTable.tsx
 import React from "react";
 import {
   Table,
@@ -8,6 +7,19 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
+
+type SpeedZone = {
+  registered: string;
+  address: string;
+  longitude: number;
+  latitude: number;
+  speed_limit: number;
+  meta_data: {
+    comment: string;
+    zone_type: string;
+    active_hours: string;
+  };
+};
 
 type ParkingLocation = {
   status: string;
@@ -25,12 +37,13 @@ type City = {
   city_registered: string;
   status: string;
   parking_locations: ParkingLocation[];
+  speed_zones: SpeedZone[]; // Add this type
 };
 
 type CityTableProps = {
   cities: City[];
   expandedCityId: string | null;
-  onToggleCityExpand: (cityId: string) => void;  // Use "onToggleCityExpand" here to match the prop name from `CitiesPage`
+  onToggleCityExpand: (cityId: string) => void;
 };
 
 const CityTable: React.FC<CityTableProps> = ({
@@ -64,14 +77,15 @@ const CityTable: React.FC<CityTableProps> = ({
         </TableBody>
       </Table>
 
-      {/* Expanded Parking Locations Table */}
+      {/* Expanded Details */}
       {expandedCityId && (
         <div className="mt-8">
-          <h3 className="text-xl font-semibold mb-4">Parkeringar</h3>
           {cities
             .filter((city) => city._id === expandedCityId)
             .map((city) => (
               <div key={city._id}>
+                {/* Parking Locations */}
+                <h3 className="text-xl font-semibold mb-4">Parkeringar</h3>
                 {city.parking_locations.length > 0 ? (
                   <Table aria-label="Parking Locations">
                     <TableHeader>
@@ -98,6 +112,33 @@ const CityTable: React.FC<CityTableProps> = ({
                 ) : (
                   <div className="p-4 bg-gray-100 rounded-md">
                     <p>Inga tillgängliga parkeringsplatser för denna staden.</p>
+                  </div>
+                )}
+
+                {/* Speed Zones */}
+                <h3 className="text-xl font-semibold mt-8 mb-4">Hastighetszoner</h3>
+                {city.speed_zones.length > 0 ? (
+                  <Table aria-label="Speed Zones">
+                    <TableHeader>
+                      <TableColumn>Adress</TableColumn>
+                      <TableColumn>Registrerad</TableColumn>
+                      <TableColumn>Hastighetsgräns</TableColumn>
+                      <TableColumn>Koordinater</TableColumn>
+                    </TableHeader>
+                    <TableBody>
+                      {city.speed_zones.map((zone, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{zone.address}</TableCell>
+                          <TableCell>{zone.registered}</TableCell>
+                          <TableCell>{zone.speed_limit} km/h</TableCell>
+                          <TableCell>{`${zone.latitude}, ${zone.longitude}`}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <div className="p-4 bg-gray-100 rounded-md">
+                    <p>Inga tillgängliga hastighetszoner för denna staden.</p>
                   </div>
                 )}
               </div>
