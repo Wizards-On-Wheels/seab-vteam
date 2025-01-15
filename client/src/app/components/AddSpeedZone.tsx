@@ -111,7 +111,8 @@ const AddSpeedZone: React.FC<AddSpeedZoneProps> = ({
           <div className="mb-4">
             <label className="block mb-1">
 
-              {/* Adress <span className="text-red-500">*</span> */}
+              Adress 
+              {/* <span className="text-red-500">*</span> */}
             </label>
             <input
               type="text"
