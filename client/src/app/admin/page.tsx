@@ -9,6 +9,7 @@ export default function Home() {
         backgroundSize: 'cover', // Ensures the image covers the entire screen without distortion
         backgroundPosition: 'center', // Centers the image
         backgroundRepeat: 'no-repeat', // Prevents the image from repeating
+        backgroundAttachment: 'fixed', // Keeps the image fixed while scrolling
       }}
     >
       <div className='flex flex-col items-center gap-4'>
@@ -39,7 +40,7 @@ export default function Home() {
           </Link>
           <Link href="/admin/cities">
             <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 bg-purple-500 py-4 hover:bg-purple-300 text-white transition-all rounded-lg'>
-              <span className='text-2xl'>🏙️</span>
+              <span className='text-2xl'>🏙️</span> {/* Cityscape Icon */}
               Städer
             </div>
           </Link>
