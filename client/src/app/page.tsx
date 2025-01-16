@@ -10,7 +10,7 @@ export default function Home() {
           {/* Temporary hrefs!! */}
           <Link href="/admin">Admin</Link>
           <Link href="/user-webapp">User web app</Link>
-          <Link href="/mobileapp">User mobile app</Link>
+          <Link href="/ride">User mobile app</Link>
         </ul>
 
         <form className='future-login-form'>

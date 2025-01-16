@@ -84,7 +84,7 @@ const BikeMap = () => {
         />
         
         {/* Place a marker at the user's location */}
-        <Marker position={userLocation}>
+        <Marker position={userLocation} icon={profileIcon}>
           <Popup>
             🚲 You are here! <br /> Find bikes near your location.
           </Popup>

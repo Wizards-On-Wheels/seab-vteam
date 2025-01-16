@@ -1,5 +1,6 @@
 import React from "react";
 
+
 type RideHistoryProps = {
   rideHistory: { title: string; date: string; Price: number }[];
 };

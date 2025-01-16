@@ -5,7 +5,7 @@ import PriceInfo from "../components/PriceInfo";
 import CartMenu from "../components/Payment";
 
 const links = [
-  { label: "Börja Åka!", href: "/" },
+  { label: "Börja Åka!", href: "/ride" },
   { label: "Våra Sparkcyklar", href: "/info" },
   { label: "Min Profil", href: "/profile" },
   { label: "Priser Och Åkpass", href: "/price" },
@@ -55,7 +55,7 @@ export default function Info() {
   };
 
   return (
-    <div className="grid min-h-screen items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
+    <div className="grid min-h-screen items-center justify-items-center pt-16 pb-15 font-[family-name:var(--font-geist-sans)] sm:p-20">
       <div className="flex justify-between">
         <HamburgerMenu links={links} />
         <img className="h-[60px]" src="/images/scooterriding.png" alt="Our Logo" />

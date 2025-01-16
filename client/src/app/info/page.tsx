@@ -1,7 +1,7 @@
 import HamburgerMenu from "../components/HamburgerMenu";
 
 const links = [
-    {label: "Börja Åka!", href: "/"},
+    {label: "Börja Åka!", href: "/ride"},
     {label: "Våra Sparkcyklar", href: "/info"},
     {label: "Min Profil", href: "/profile"},
     {label: "Priser Och Åkpass", href: "/price"}
