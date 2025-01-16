@@ -106,4 +106,16 @@ input[type=submit]:hover {
     height: 20vh;
     background-color: #F3E4E1;
   } */
+  .w-60 {
+    width: 100%;
+  }
+  .h-27 {
+    height: auto;
+  }
+  .text-4xl {
+    font-size: 2rem; /* Adjusting for smaller screen sizes */
+  }
+  .text-2xl {
+    font-size: 1.25rem;
+  }
 }
