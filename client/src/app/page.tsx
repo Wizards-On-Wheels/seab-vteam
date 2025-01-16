@@ -8,34 +8,10 @@ export default function Home() {
       <main className='row-start-2 flex flex-col items-center gap-8 sm:items-start'>
         <ul className='temporary-links'>
           {/* Temporary hrefs!! */}
-          <Link href="/admin">Admin</Link>
-          <Link href="/user-webapp">User web app</Link>
-          <Link href="/ride">User mobile app</Link>
+          <Link href="/admin">Admin (tillfällig länk)</Link>
+          <Link href="/user/login">Logga in (ska flyttas)</Link>
+          <Link href="/mobileapp">App (tillfällig länk)</Link>
         </ul>
-
-        <form className='future-login-form'>
-          <h2>Future login form...</h2>
-            <label htmlFor='username'></label>
-              <input
-                  id="username"
-                  type="text"
-                  name="username"
-                  placeholder="Username"
-                  //value={username}
-                  //onChange={(e) => {setUsername(e.target.value)}}
-                  required
-              />
-            <label htmlFor='password'></label>
-              <input
-                  id="password"
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  //onChange={(e) => {setPassword(e.target.value)}}
-                  required
-              />
-          <input type="submit" value="Sign in" />
-        </form>
       </main>
       <footer className='row-start-3 flex flex-wrap items-center justify-center gap-6'>
         A project by Wizards on Wheels
