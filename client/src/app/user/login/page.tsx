@@ -18,6 +18,12 @@ async function auth() {
     }
 }
 
+const loginWithGitHub = () => {
+    const clientID = 'Ov23liHp0pUfQ61a3M77';
+    const redirectURI = 'http://localhost:3000/user/github/callback';
+    window.location.assign(`https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`);
+};
+
 export default function Login() {
     // Used for login form
     const [username, setUsername] = useState("");
@@ -27,7 +33,7 @@ export default function Login() {
     const [message, setMessage] = useState("");
 
     // eslint-disable-next-line
-    const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => { // parameter type correct? React.FormEvent<HTMLFormElement>
+    const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
@@ -43,25 +49,27 @@ export default function Login() {
             window.location.href = "/user";
 
         } catch (error) {
-            alert(error)
-            // if (error.response) {
-            //     setMessage(error.response.data.message)
-            // } else {
-            //     setMessage("An unexpected error occurred. Please try again.");
-            // }
+            setMessage(error.response.data.message)
         }
     };
 
     return (
         <div className='items-center justify-items-center gap-8 p-8 pb-20 font-[family-name:var(--font-geist-sans)]'>
+            <Link href="/" >
+                <h1 className='text-3xl'>Svenska Elsparkcyklar AB</h1>
+            </Link>
             <div className='login-div'>
-                <img src="../../images/road.jpg"></img>
+                <img src="../../images/road.jpg" alt="road image" ></img>
                 <div className="login">
-                    <GoogleButton
+                    <button onClick={loginWithGitHub} className="github_button" >
+                        <img src="../../images/github.png" alt="github logo" />
+                        Logga in med Github
+                    </button>
+                    {/* <GoogleButton
                         type="dark"
                         label="Logga in med Google"
                         onClick={() => auth()}
-                    />
+                    /> */}
                     <div className="my-4">
                         <p>Eller</p>
                     </div>
@@ -87,7 +95,8 @@ export default function Login() {
                         />
                         <input type="submit" value="LOGGA IN" />
                     </form>
-                    <p>Inte medlem än? <span className="register"><Link href="/user/register">Registrera dig här</Link></span></p>
+                    <p>Inte medlem än? <span className="register"><Link href="/user/register" >Registrera dig här</Link></span></p>
+                    <p className="error-message" >{message}</p>
                 </div>
             </div>
         </div>

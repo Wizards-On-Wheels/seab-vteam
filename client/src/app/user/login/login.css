@@ -26,6 +26,25 @@
     width: 300px;
 }
 
+.github_button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-bottom: 15px;
+    padding-right: 8px;
+    align-items: center;
+    border: 2px solid black;
+    border-radius: 4px;
+    background-color: #000000;
+    color: #ffffff;
+    width: 80%;
+
+    img {
+        width: 20%;
+        background-color: #ffffff;
+    }
+}
+
 input[type=text], input[type=password] {
     height: 45px;
     display: inline-block;
@@ -54,4 +73,8 @@ input[type=submit]:hover {
 .register {
     color: #a75244;
     text-decoration: underline;
+}
+
+.error-message {
+    color: red;
 }

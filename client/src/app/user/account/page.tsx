@@ -1,20 +1,16 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faClockRotateLeft, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 
 export default function UserAccount() {
-  const [token, setToken] = useState("");
-
-  // kontroll om tokens finns, i så fall visas profilen
-  // om det inte finns token så skickas man tillbaka till login-sidan
-  // if admin, href "/admin"
+  const token = localStorage.getItem("token");
 
   if (!token) {
-    window.location.href = "/user-webapp"
+    window.location.href = "/user"
   }
 
   return (

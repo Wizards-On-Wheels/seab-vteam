@@ -27,10 +27,7 @@ export default function Register() {
 
                 alert(response.data.message);
             } catch (error) {
-                alert(error); // fix this
-                // if (error.response) {
-                //     setMessage(error.response.data.message)
-                // }
+                setMessage(error.response.data.error);
             }
 
         } else {
@@ -40,6 +37,9 @@ export default function Register() {
 
     return (
         <div className='items-center justify-items-center gap-8 p-8 pb-20 font-[family-name:var(--font-geist-sans)]'>
+            <Link href="/" >
+                <h1 className='text-3xl'>Svenska Elsparkcyklar AB</h1>
+            </Link>
             <div className='login-div'>
                 <img src="../../images/road.jpg"></img>
                 <div className="login">
@@ -79,6 +79,7 @@ export default function Register() {
                         <input type="submit" value="REGISTRERA" />
                     </form>
                     <p>Redan medlem? <span className="register"><Link href="/user/login">Logga in här</Link></span></p>
+                    <p className="error-message" >{message}</p>
                 </div>
             </div>
         </div>
