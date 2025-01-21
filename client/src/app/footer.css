@@ -34,7 +34,7 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  padding: 25px 0 25px 75px;
+  padding: 25px 0 45px 75px;
   font-size: 20px;
 }
 
@@ -52,35 +52,13 @@
 .item3 {
   grid-column-start: 3;
   grid-column-end: 4;
-  /* grid-row-start: 1;
-  grid-row-end: 3; */
-  padding: 90px 0;
-  font-size: 18px;
-}
-
-.footer-links {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: min-content;
-  height: 190px;
-  /* padding: 15px; */
-  /* background-color: #000000ae; */
   margin-left: 40%;
-}
-
-/* .item3 {
-  grid-column-start: 3;
-  grid-column-end: 4;
-  grid-row-start: 1;
-  grid-row-end: 3;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  padding-top: 25%;
   font-size: 18px;
-  position: relative;
-  width: 80%;
-} */
+}
 
 .email-input {
   height: 60px;
