@@ -10,7 +10,6 @@ import '../footer.css';
 export default function Footer() {
     return (
         <div className="footer" >
-
             <div className="item1" >
                 <div>
                     <h1>SEAB</h1>
@@ -29,7 +28,10 @@ export default function Footer() {
                     </label>
 
             </div>
-            <div className="item2" >
+            <div className='item2'>
+                © Wizards on Wheels
+            </div>
+            <div className="item3" >
                 <div className="footer-links" >
                     <p>Om oss</p>
                     <p>Prislista</p>
