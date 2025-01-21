@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
-import Link from 'next/link'
+import Link from 'next/link';
 import axios from 'axios';
+import Footer from '../../components/Footer';
+import Header from '../../components/Header';
 
 import '../login/login.css';
 
@@ -36,52 +38,56 @@ export default function Register() {
     }
 
     return (
-        <div className='items-center justify-items-center gap-8 p-8 pb-20 font-[family-name:var(--font-geist-sans)]'>
-            <Link href="/" >
-                <h1 className='text-3xl'>Svenska Elsparkcyklar AB</h1>
-            </Link>
-            <div className='login-div'>
-                <img src="../../images/road.jpg"></img>
-                <div className="login">
-                    <div className="my-4">
-                        <h2>Skapa konto</h2>
+        <div>
+            <Header />
+            <main>
+                <div className='login-div'>
+                    <img src="../../images/road.jpg"></img>
+                    <div className="login">
+                        <div className="my-4">
+                            <h2>Skapa konto</h2>
+                        </div>
+                        <form onSubmit={handleRegister} className="login-form">
+                            <label htmlFor='username'></label>
+                            <input
+                                id="username"
+                                className="input-text-field"
+                                type="text"
+                                name="username"
+                                placeholder="Användarnamn"
+                                value={username}
+                                onChange={(e) => { setUsername(e.target.value) }}
+                                required
+                            />
+                            <label htmlFor='password'></label>
+                            <input
+                                id="password"
+                                className="input-text-field"
+                                type="password"
+                                name="password"
+                                placeholder="Lösenord (minst 8 tecken)"
+                                onChange={(e) => { setPassword(e.target.value) }}
+                                required
+                            />
+                            <label htmlFor='repeat-password'></label>
+                            <input
+                                id="repeat-password"
+                                className="input-text-field"
+                                type="password"
+                                name="repeat-password"
+                                placeholder="Upprepa lösenord"
+                                value={repeatedPassword}
+                                onChange={(e) => {setRepeatedPassword(e.target.value)}}
+                                required
+                            />
+                            <input type="submit" value="REGISTRERA" />
+                        </form>
+                        <p>Redan medlem? <span className="register"><Link href="/user/login">Logga in här</Link></span></p>
+                        <p className="error-message" >{message}</p>
                     </div>
-                    <form onSubmit={handleRegister} className="login-form">
-                        <label htmlFor='username'></label>
-                        <input
-                            id="username"
-                            type="text"
-                            name="username"
-                            placeholder="Användarnamn"
-                            value={username}
-                            onChange={(e) => { setUsername(e.target.value) }}
-                            required
-                        />
-                        <label htmlFor='password'></label>
-                        <input
-                            id="password"
-                            type="password"
-                            name="password"
-                            placeholder="Lösenord (minst 8 tecken)"
-                            onChange={(e) => { setPassword(e.target.value) }}
-                            required
-                        />
-                        <label htmlFor='repeat-password'></label>
-                        <input
-                            id="repeat-password"
-                            type="password"
-                            name="repeat-password"
-                            placeholder="Upprepa lösenord"
-                            value={repeatedPassword}
-                            onChange={(e) => {setRepeatedPassword(e.target.value)}}
-                            required
-                        />
-                        <input type="submit" value="REGISTRERA" />
-                    </form>
-                    <p>Redan medlem? <span className="register"><Link href="/user/login">Logga in här</Link></span></p>
-                    <p className="error-message" >{message}</p>
                 </div>
-            </div>
+            </main>
+            <Footer />
         </div>
     )
 }

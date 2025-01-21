@@ -24,6 +24,8 @@
     display: flex;
     flex-direction: column;
     width: 300px;
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
 
 .github_button {
@@ -45,12 +47,14 @@
     }
 }
 
-input[type=text], input[type=password] {
+.input-text-field {
     height: 45px;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    padding-left: 15px;
+    margin-bottom: 10px;
 }
 
 input[type=submit] {
@@ -77,4 +81,10 @@ input[type=submit]:hover {
 
 .error-message {
     color: red;
+}
+
+.change-password-form {
+    display: flex;
+    flex-direction: column;
+    width: 280px;
 }

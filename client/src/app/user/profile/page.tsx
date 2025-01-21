@@ -1,98 +1,93 @@
 "use client";
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link';
+import axios from 'axios';
+import Footer from '../../components/Footer';
+import Header from '../../components/Header';
+
+import '../user.css';
 
 export default function Profile() {
-  const [username, setUsername] = useState("Användarnamn");
+    const email = localStorage.getItem("email");
+    const oauth = localStorage.getItem("oauth");
 
-  return (
-    <div className='grid min-h-screen grid-rows-[500px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20'>
-      <div className='flex flex-col items-center gap-4'>
-        <h2 className='text-2xl font-semibold'>{username}s profil</h2>
-        <form className='flex flex-col items-center w-80'>
-            <label htmlFor='username'></label>
-              <input
-                id="username"
-                type="text"
-                name="username"
-                placeholder="Användarnamn"
-                value={username}
-                onChange={(e) => {setUsername(e.target.value)}}
-                required
-              />
-            <label htmlFor='firstname'></label>
-              <input
-                id="firstname"
-                type="text"
-                name="firstname"
-                placeholder="Förnamn"
-                // value={username}
-                // onChange={(e) => {setUsername(e.target.value)}}
-                required
-              />
-            <label htmlFor='lastname'></label>
-              <input
-                id="lastname"
-                type="text"
-                name="lastname"
-                placeholder="Efternamn"
-                // value={username}
-                // onChange={(e) => {setUsername(e.target.value)}}
-                required
-              />
-            <label htmlFor='birthday'></label>
-              <input
-                id="birthday"
-                type="text"
-                name="birthday"
-                placeholder="Födelsedatum"
-                //onChange={(e) => {setPassword(e.target.value)}}
-                required
-              />
-            <label htmlFor='address'></label>
-              <input
-                id="address"
-                type="text"
-                name="address"
-                placeholder="Gatuadress"
-                //onChange={(e) => {setPassword(e.target.value)}}
-                required
-              />
-            <label htmlFor='zip-code'></label>
-              <input
-                id="zip-code"
-                type="text"
-                name="zip-code"
-                placeholder="Postnummer"
-                //onChange={(e) => {setPassword(e.target.value)}}
-                required
-              />
-            <label htmlFor='city'></label>
-              <input
-                id="city"
-                type="text"
-                name="city"
-                placeholder="Ort"
-                //onChange={(e) => {setPassword(e.target.value)}}
-                required
-              />
-            <label htmlFor='country'></label>
-              <input
-                id="country"
-                type="text"
-                name="country"
-                placeholder="Land"
-                //onChange={(e) => {setPassword(e.target.value)}}
-                required
-              />
-          <input type="submit" value="Uppdatera kontaktuppgifter" />
-        </form>
-      </div>
-      <main className='row-start-2 flex flex-col items-center gap-8 sm:items-start'>
-      </main>
-      <footer className='row-start-3 flex flex-wrap items-center justify-center gap-6'>
-        A project by Wizards on Wheels
-      </footer>
-    </div>
-  )
+    const [password, setPassword] = useState("");
+    const [repeatedPassword, setRepeatedPassword] = useState("");
+
+    const [message, setMessage] = useState("");
+
+    // This function is used when updating username
+    // const getUserDetails = async () => {
+    //     const details = await axios.get(`http://localhost:1337/user/details/${email}`);
+    // }
+
+    // useEffect(() => {
+    //     console.log(email)
+    //     getUserDetails();
+    // }, []);
+
+    const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (password === repeatedPassword) {
+            try {
+            const response = await axios.put(`http://localhost:1337/user/update/password`, {
+                email: email,
+                password: password
+            });
+
+            setMessage(response.data.message);
+            } catch (error) {
+            setMessage(error.response.data.error);
+            }
+
+        } else {
+            setMessage("Passwords don't match");
+        }
+    }
+
+    return (
+        <div>
+            <Header />
+            <main>
+                <h2 className='text-2xl font-semibold'>Uppdatera lösenord</h2>
+                <form onSubmit={handleChangePassword} className="change-password-form" >
+                    <label htmlFor='username'></label>
+                    <input
+                        id="username"
+                        className='input-text-field'
+                        type="text"
+                        name="username"
+                        readOnly
+                        defaultValue={email}
+                    />
+                    <label htmlFor='password'></label>
+                    <input
+                        id="password"
+                        className='input-text-field'
+                        type="password"
+                        name="password"
+                        placeholder="Nytt lösenord (minst 8 tecken)"
+                        onChange={(e) => { setPassword(e.target.value) }}
+                        required
+                    />
+                    <label htmlFor='repeat-password'></label>
+                    <input
+                        id="repeat-password"
+                        className='input-text-field'
+                        type="password"
+                        name="repeat-password"
+                        placeholder="Upprepa lösenord"
+                        value={repeatedPassword}
+                        onChange={(e) => { setRepeatedPassword(e.target.value) }}
+                        required
+                    />
+                    <input type="submit" value="Ändra lösenord" className="change-pwd-btn" />
+                </form>
+                <p className="error-message" >{message}</p>
+            </main>
+            <Footer />
+        </div>
+    )
 }
