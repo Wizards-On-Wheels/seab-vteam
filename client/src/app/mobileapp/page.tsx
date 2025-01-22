@@ -1,4 +1,7 @@
+"use client"
 import HamburgerMenu from "../components/HamburgerMenu"
+import Getcyklar from "../components/test"
+
 const links = [
   {label: "Börja Åka!", href: "/ride"},
   {label: "Våra Sparkcyklar", href: "/info"},
@@ -12,6 +15,7 @@ export default function Home() {
       <main className='row-start-2 flex flex-col items-center gap-8 sm:items-start'>
         <HamburgerMenu links={links}>
         </HamburgerMenu>
+        <Getcyklar></Getcyklar>
       </main>
       <footer className='row-start-3 flex flex-wrap items-center justify-center gap-6'>
         A project by Wizards on Wheels
@@ -19,3 +23,4 @@ export default function Home() {
     </div>
   )
 }
+
