@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import Image from 'next/image'
 import Link from 'next/link'
 import Footer from './components/Footer';
@@ -22,6 +23,8 @@ export default function Home() {
   )
 }
 =======
+=======
+>>>>>>> Stashed changes
 import Link from 'next/link'
 import Footer from './components/Footer';
 import Header from './components/Header';
