@@ -9,8 +9,8 @@ import Header from '../../components/Header';
 import '../user.css';
 
 export default function Payment() {
-    const handlePayment = async () => {
-
+    const handlePayment = async (e: React.FormEvent<HTMLFormElement>) => {
+        window.location.reload();
     }
 
     return (
@@ -23,17 +23,17 @@ export default function Payment() {
                     <label htmlFor='username'></label>
                     <input
                         id="username"
-                        className='input-username-password'
+                        className='input-text-field'
                         type="number"
                         name="username"
                         defaultValue="0"
                     />
-                    <input type="submit" value="Slutför" disabled />
+                    <input type="submit" value="Slutför" className="change-pwd-btn" />
                 </form>
                 <div className="my-4">
                     <p>Eller</p>
                 </div>
-                <button className="monthly-btn">Starta månadsabonnemang</button>
+                <button className="change-pwd-btn">Starta månadsabonnemang</button>
             </main>
             <Footer />
         </div>

@@ -1,6 +1,21 @@
+<<<<<<< Updated upstream
 {
   "extends": ["eslint:recommended", "next/core-web-vitals", "prettier"],
   "rules": {
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
   }
 }
+=======
+{
+  "extends": [
+    "eslint:recommended",
+    "next/core-web-vitals",
+    "prettier",
+    "plugin:testing-library/react",
+    "plugin:jest-dom/recommended"
+  ],
+  "rules": {
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+  }
+}
+>>>>>>> Stashed changes

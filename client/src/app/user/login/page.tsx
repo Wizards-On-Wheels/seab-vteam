@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import Link from 'next/link'
+import Link from 'next/link';
 import axios from 'axios';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';

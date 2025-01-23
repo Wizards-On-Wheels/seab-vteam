@@ -14,15 +14,14 @@ export default function GitHubCallback() {
             }
         }).then((response) => {
             return response.json()
-        //}).then(data => console.log(data.login))
         }).then((data) => {
             localStorage.setItem("user", data.name),
             localStorage.setItem("email", data.login)
         })
     }
 
+    // Add user to database when logging in for the first time
     async function addToDatabaseFirstLogin() {
-        // Add user to database when logging in for the first time
         try {
             await axios.get(`http://localhost:1337/user/details/${localStorage.getItem("email")}`);
 
@@ -43,6 +42,23 @@ export default function GitHubCallback() {
         }
     }
 
+    async function getAccessToken(param: String) {
+        await fetch(`http://localhost:1337/oauth/getAccessToken?code=${param}`, {
+            method: "GET"
+        }).then((response) => {
+            return response.json();
+        }).then(async (data) => {
+            if (data.access_token) {
+                localStorage.setItem("token", data.access_token);
+                localStorage.setItem("oauth", "true");
+                await getUserData();
+                await addToDatabaseFirstLogin();
+                setRerender(!rerender);
+                window.location.assign("/user");
+            }
+        });
+    }
+
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const codeParam = urlParams.get('code');
@@ -51,24 +67,9 @@ export default function GitHubCallback() {
         localStorage.removeItem("email");
 
         if (codeParam && (localStorage.getItem("token") === null)) {
-            async function getAccessToken() {
-                await fetch(`http://localhost:1337/oauth/getAccessToken?code=${codeParam}`, {
-                    method: "GET"
-                }).then((response) => {
-                    return response.json();
-                }).then(async (data) => {
-                    if (data.access_token) {
-                        localStorage.setItem("token", data.access_token);
-                        localStorage.setItem("oauth", "true");
-                        await getUserData();
-                        await addToDatabaseFirstLogin();
-                        setRerender(!rerender);
-                        window.location.assign("/user");
-                    }
-                });
-            }
-            getAccessToken();
+            getAccessToken(codeParam);
         }
+        // eslint-disable-next-line
     }, []);
 
     return <div>Processing GitHub login...</div>;
