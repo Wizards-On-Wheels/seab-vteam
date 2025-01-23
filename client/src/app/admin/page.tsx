@@ -45,6 +45,13 @@ export default function Home() {
             </div>
           </Link>
         </div>
+        {/* Home Button */}
+        <Link href="/ride">
+          <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 bg-red-500 py-4 hover:bg-red-300 text-white transition-all rounded-lg'>
+            <span className='text-3xl'>🗺️</span>
+            Map
+          </div>
+        </Link>
       </div>
       <main className='row-start-2 flex flex-col items-center gap-8 sm:items-start'>
       </main>
