@@ -21,7 +21,7 @@ const customParkingIcon = new L.Icon({
 
 const customParkingAndCargingIcon = new L.Icon({
   iconUrl: "/images/parkingcharging.png",
-  iconSize: [68, 60],
+  iconSize: [60, 68],
   iconAnchor: [30, 60],
   popupAnchor: [0, -60],
 });
@@ -71,6 +71,10 @@ type BikeProps = {
 };
 
 const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
+  const id = localStorage.getItem("user");
+  console.log(localStorage);
+  console.log(id);
+  
   const [userLocation, setUserLocation] = useState<[number, number]>([
     56.1820964415348,
     15.591154345847087,
