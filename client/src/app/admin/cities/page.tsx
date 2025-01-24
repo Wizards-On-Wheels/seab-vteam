@@ -6,7 +6,7 @@ import AddParking from "../../components/AddParking";
 import RemoveParking from "../../components/RemoveParking";
 import CityTable from "../../components/CityTable";
 import AddSpeedZone from "../../components/AddSpeedZone";
-import RemoveSpeedZone from "../../components/RemoveSpeedZone"; // Import the RemoveSpeedZone component
+import RemoveSpeedZone from "../../components/RemoveSpeedZone";
 
 type City = {
   _id: string;
@@ -14,19 +14,31 @@ type City = {
   city_registered: string;
   status: string;
   parking_locations: any[];
-  speed_zones?: any[]; // Optional to accommodate cities without speed zones
+  speed_zones?: any[];
+};
+
+type Bike = {
+  _id: string;
+  registered: string;
+  city: string;
+  current_location: { longitude: number; latitude: number };
+  parked: boolean;
+  battery: number;
+  status: string;
 };
 
 export default function CitiesPage() {
   const [cities, setCities] = useState<City[]>([]);
+  const [bikes, setBikes] = useState<Bike[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedCityId, setExpandedCityId] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAddSpeedZoneForm, setShowAddSpeedZoneForm] = useState(false);
   const [showRemoveForm, setShowRemoveForm] = useState(false);
-  const [showRemoveSpeedZoneForm, setShowRemoveSpeedZoneForm] = useState(false); // New state
+  const [showRemoveSpeedZoneForm, setShowRemoveSpeedZoneForm] = useState(false);
 
+  // Fetch Cities and Bikes
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -45,7 +57,19 @@ export default function CitiesPage() {
       }
     };
 
+    const fetchBikes = async () => {
+      try {
+        const response = await fetch("http://localhost:1337/admin/collections/bikes/data");
+        if (!response.ok) throw new Error("Failed to fetch bikes.");
+        const data: Bike[] = await response.json();
+        setBikes(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
     fetchCities();
+    fetchBikes();
   }, []);
 
   const toggleCityExpand = (cityId: string) => {
@@ -85,7 +109,7 @@ export default function CitiesPage() {
           Lägg till hastighetszon
         </button>
         <button
-          onClick={() => setShowRemoveSpeedZoneForm(true)} // Opens RemoveSpeedZone form
+          onClick={() => setShowRemoveSpeedZoneForm(true)}
           className="px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
         >
           Ta bort hastighetszon
@@ -124,6 +148,7 @@ export default function CitiesPage() {
       <div className="overflow-x-auto">
         <CityTable
           cities={cities}
+          bikes={bikes} // Pass bikes to CityTable
           expandedCityId={expandedCityId}
           onToggleCityExpand={toggleCityExpand}
         />

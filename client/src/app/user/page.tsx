@@ -11,19 +11,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faClockRotateLeft, faCreditCard, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 export default function UserPage() {
-    // eslint-disable-next-line
+    const token = localStorage.getItem("token");
+
     const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
         localStorage.removeItem("user");
+        localStorage.removeItem("user_id");
         localStorage.removeItem("email");
         localStorage.removeItem("token");
 
         window.location.reload();
     };
 
-    if (!localStorage.getItem("token")) {
-        window.location.href = "/user/login"
+    if (!token) {
+        return (
+            window.location.href = "/user/login"
+        )
     }
 
     return (

@@ -46,8 +46,9 @@ type CityTableProps = {
   onToggleCityExpand: (cityId: string) => void;
 };
 
-const CityTable: React.FC<CityTableProps> = ({
+const CityTable: React.FC<CityTableProps & { bikes: Bike[] }> = ({
   cities,
+  bikes,
   expandedCityId,
   onToggleCityExpand,
 }) => {
@@ -78,73 +79,84 @@ const CityTable: React.FC<CityTableProps> = ({
       </Table>
 
       {/* Expanded Details */}
-      {expandedCityId && (
-        <div className="mt-8">
-          {cities
-            .filter((city) => city._id === expandedCityId)
-            .map((city) => (
-              <div key={city._id}>
-                {/* Parking Locations */}
-                <h3 className="text-xl font-semibold mb-4">Parkeringar</h3>
-                {city.parking_locations.length > 0 ? (
-                  <Table aria-label="Parking Locations">
-                    <TableHeader>
-                      <TableColumn>Adress</TableColumn>
-                      <TableColumn>Registrerad</TableColumn>
-                      <TableColumn>Status</TableColumn>
-                      <TableColumn>Laddstation</TableColumn>
-                      <TableColumn>Reparation</TableColumn>
-                      <TableColumn>Koordinater</TableColumn>
-                    </TableHeader>
-                    <TableBody>
-                      {city.parking_locations.map((location, index) => (
+      {expandedCityId &&
+        cities
+          .filter((city) => city._id === expandedCityId)
+          .map((city) => (
+            <div key={city._id}>
+              <h3 className="text-xl mt-4 font-semibold mb-4">Parkeringar</h3>
+              {city.parking_locations.length > 0 ? (
+                <Table aria-label="Parking Locations">
+                  <TableHeader>
+                    <TableColumn>Adress</TableColumn>
+                    <TableColumn>Registrerad</TableColumn>
+                    <TableColumn>Status</TableColumn>
+                    <TableColumn>Koordinater</TableColumn>
+                    <TableColumn>Bikes Parked</TableColumn>
+                  </TableHeader>
+                  <TableBody>
+                    {city.parking_locations.map((location, index) => {
+                      const parkedBikes = bikes.filter(
+                        (bike) =>
+                          bike.parked &&
+                          bike.current_location.longitude === parseFloat(location.longitude) &&
+                          bike.current_location.latitude === parseFloat(location.latitude)
+                      );
+
+                      return (
                         <TableRow key={index}>
                           <TableCell>{location.address}</TableCell>
                           <TableCell>{location.registered}</TableCell>
                           <TableCell>{location.status}</TableCell>
-                          <TableCell>{location.charging_station ? "Yes" : "No"}</TableCell>
-                          <TableCell>{location.maintenance ? "Yes" : "No"}</TableCell>
                           <TableCell>{`${location.latitude}, ${location.longitude}`}</TableCell>
+                          <TableCell>
+                            {parkedBikes.length > 0 ? (
+                              <ul>
+                                {parkedBikes.map((bike) => (
+                                  <li key={bike._id}>
+                                    ID: {bike._id}, Battery: {bike.battery}%
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              "No bikes parked."
+                            )}
+                          </TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                ) : (
-                  <div className="p-4 bg-gray-100 rounded-md">
-                    <p>Inga tillgängliga parkeringsplatser för denna staden.</p>
-                  </div>
-                )}
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              ) : (
+                <p>Inga tillgängliga parkeringsplatser.</p>
+              )}
 
-                {/* Speed Zones */}
-                <h3 className="text-xl font-semibold mt-8 mb-4">Hastighetszoner</h3>
-                {city.speed_zones.length > 0 ? (
-                  <Table aria-label="Speed Zones">
-                    <TableHeader>
-                      <TableColumn>Adress</TableColumn>
-                      <TableColumn>Registrerad</TableColumn>
-                      <TableColumn>Hastighetsgräns</TableColumn>
-                      <TableColumn>Koordinater</TableColumn>
-                    </TableHeader>
-                    <TableBody>
-                      {city.speed_zones.map((zone, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{zone.address}</TableCell>
-                          <TableCell>{zone.registered}</TableCell>
-                          <TableCell>{zone.speed_limit} km/h</TableCell>
-                          <TableCell>{`${zone.latitude}, ${zone.longitude}`}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                ) : (
-                  <div className="p-4 bg-gray-100 rounded-md">
-                    <p>Inga tillgängliga hastighetszoner för denna staden.</p>
-                  </div>
-                )}
-              </div>
-            ))}
-        </div>
-      )}
+              {/* Speed Zones */}
+              <h3 className="text-xl font-semibold mt-8 mb-4">Hastighetszoner</h3>
+              {city.speed_zones.length > 0 ? (
+                <Table aria-label="Speed Zones">
+                  <TableHeader>
+                    <TableColumn>Adress</TableColumn>
+                    <TableColumn>Registrerad</TableColumn>
+                    <TableColumn>Hastighetsgräns</TableColumn>
+                    <TableColumn>Koordinater</TableColumn>
+                  </TableHeader>
+                  <TableBody>
+                    {city.speed_zones.map((zone, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{zone.address}</TableCell>
+                        <TableCell>{zone.registered}</TableCell>
+                        <TableCell>{zone.speed_limit} km/h</TableCell>
+                        <TableCell>{`${zone.latitude}, ${zone.longitude}`}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              ) : (
+                <p>Inga tillgängliga hastighetszoner.</p>
+              )}
+            </div>
+          ))}
     </>
   );
 };
