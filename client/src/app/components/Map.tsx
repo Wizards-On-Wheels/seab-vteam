@@ -1,14 +1,29 @@
-import { StopBike, StartBike } from "./start-stop-ride";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { StopBike, StartBike, GetParkingZones } from "./start-stop-ride";
+import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import React, { useEffect, useState, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+
 
 const customIcon = new L.Icon({
   iconUrl: "/images/scooterMarker.svg",
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [0, -48],
+});
+
+const customParkingIcon = new L.Icon({
+  iconUrl: "/images/parkingicon.svg",
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [0, -48],
+});
+
+const customParkingAndCargingIcon = new L.Icon({
+  iconUrl: "/images/parkingcharging.png",
+  iconSize: [68, 60],
+  iconAnchor: [30, 60],
+  popupAnchor: [0, -60],
 });
 
 const profileIcon = new L.Icon({
@@ -18,9 +33,28 @@ const profileIcon = new L.Icon({
   popupAnchor: [0, -48],
 });
 
-const userInfo = {
-  username: "test@test.se",
-  name: "testing testers"
+type CityProps = {
+  cities: {
+    city: string;
+    city_registered: string;
+    status: string;
+    _id: string;
+    parking_locations: {
+      status: string;
+      registered: string;
+      address: string;
+      longitude: number | string;
+      latitude: number | string;
+      charging_station: boolean;
+    }[];
+    speed_zones: {
+      registered: string;
+      address: string;
+      longitude: number;
+      latitude: number;
+      speed_limit: number;
+    }[];
+  }[];
 };
 
 type BikeProps = {
@@ -41,25 +75,41 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
     56.1820964415348,
     15.591154345847087,
   ]);
+  const [parkingZones, setParkingZones] = useState<CityProps["cities"]>([]);
   const mapRef = useRef<L.Map | null>(null); // Reference to the Leaflet map instance
-  const [isRiding, setIsRiding] = useState(false); // to show start and stop buttons
   const [ridingBikeId, setRidingBikeId] = useState<string | undefined>(undefined);
   const handleStart = async (userId: string, bikeId: string) => {
         var test = await StartBike(userId, bikeId);
         if ( test == 200){
-          setIsRiding(true);
           setRidingBikeId(bikeId)
         }
         
     };
-
+    // Handle the Put request and set the riding bike id to not be used anymore
     const handleStop = async (userId: string, bikeId: string) => {
         var test = await StopBike(userId, bikeId);
         if ( test == 200){
-          setIsRiding(false);
           setRidingBikeId(undefined)
         }
     };
+
+    // Handle the fetched data and but it in a usestate
+    const handleParkingZone = async () => {
+      try {
+        const citiesData = await GetParkingZones();
+        if (citiesData) {
+          setParkingZones(citiesData);
+          console.log("Fetched parking zones:", citiesData);
+        }
+      } catch (error) {
+        console.error("Error fetching parking zones:", error);
+      }
+    };
+
+    // just run the function
+    useEffect(() => {
+      handleParkingZone();
+    }, []);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -110,7 +160,50 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
             🚲 You are here! <br /> Find bikes near your location.
           </Popup>
         </Marker>
-        {bikes.map((bike) => {
+
+        {parkingZones.map((city) =>
+          city.parking_locations.map((location, index) => {
+            const lat = parseFloat(location.latitude as string);
+            const lng = parseFloat(location.longitude as string);
+            const position: [number, number] = [lat, lng];
+            const radius = 100; 
+            const circleOptions = { color: 'steelblue', fillColor: 'blue', fillOpacity: 0.1 };
+
+            if (!isNaN(lat) && !isNaN(lng) && !location.charging_station) {
+              return (
+                <React.Fragment key={index}>
+                  <Marker position={position} icon={customParkingIcon}>
+                    <Popup>
+                      <strong>Parking Location:</strong> {location.address}
+                      <br />
+                      Status: {location.status}
+                    </Popup>
+                  </Marker>
+                  <Circle center={position} radius={radius} pathOptions={circleOptions} />
+                </React.Fragment>
+              );
+            } else if (!isNaN(lat) && !isNaN(lng)) {
+              return (
+                <React.Fragment key={index}>
+                  <Marker position={position} icon={customParkingAndCargingIcon}>
+                    <Popup>
+                      <strong>Parking Location:</strong> {location.address}
+                      <br />
+                      Status: {location.status}
+                      <br />
+                      Registered: {location.registered}
+                    </Popup>
+                  </Marker>
+                  <Circle center={position} radius={radius} pathOptions={circleOptions} />
+                </React.Fragment>
+              );
+            } else {
+              console.warn(`Invalid coordinates for parking location: ${location.address}`);
+              return null;
+            }
+          })
+        )}
+                {bikes.map((bike) => {
           const locationArray = bike.current_location.split(",");
           // Check if the location is valid before using it
           if (locationArray.length === 2) {

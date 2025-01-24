@@ -32,3 +32,20 @@ export const StopBike = async ( userId: string, bikeId: string) => {
         console.error("Error stopping the bike:", error);
     }
 };
+
+export const GetParkingZones = async () => {
+    try {
+        const response = await fetch(`http://localhost:1337/admin/collections/cities/data`, {
+            method: "GET",
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to get cities data: ${response.status}`);
+        }else {
+            console.log("We got the citie data less go");
+            return response.json();
+        }
+        
+    } catch (error) {
+        console.error("Error fetching the cities:", error);
+    }
+};
