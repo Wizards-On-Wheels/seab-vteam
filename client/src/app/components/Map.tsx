@@ -71,10 +71,7 @@ type BikeProps = {
 };
 
 const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
-  const id = localStorage.getItem("user");
-  console.log(localStorage);
-  console.log(id);
-  
+
   const [userLocation, setUserLocation] = useState<[number, number]>([
     56.1820964415348,
     15.591154345847087,
@@ -82,18 +79,32 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
   const [parkingZones, setParkingZones] = useState<CityProps["cities"]>([]);
   const mapRef = useRef<L.Map | null>(null); // Reference to the Leaflet map instance
   const [ridingBikeId, setRidingBikeId] = useState<string | undefined>(undefined);
-  const handleStart = async (userId: string, bikeId: string) => {
-        var test = await StartBike(userId, bikeId);
-        if ( test == 200){
-          setRidingBikeId(bikeId)
-        }
-        
+  
+  const handleStart = async (bikeId: string) => {
+    const userId = localStorage.getItem("user_id") || "";
+
+    if (!userId) {
+        console.error("No user_id found in localStorage");
+        return;
+    }
+
+    var test = await StartBike(userId, bikeId);
+    if (test === 200) {
+        setRidingBikeId(bikeId);
+    }
     };
-    // Handle the Put request and set the riding bike id to not be used anymore
-    const handleStop = async (userId: string, bikeId: string) => {
+
+    const handleStop = async (bikeId: string) => {
+        const userId = localStorage.getItem("user_id") || "";
+
+        if (!userId) {
+            console.error("No user_id found in localStorage");
+            return;
+        }
+
         var test = await StopBike(userId, bikeId);
-        if ( test == 200){
-          setRidingBikeId(undefined)
+        if (test === 200) {
+            setRidingBikeId(undefined);
         }
     };
 
@@ -103,7 +114,6 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
         const citiesData = await GetParkingZones();
         if (citiesData) {
           setParkingZones(citiesData);
-          console.log("Fetched parking zones:", citiesData);
         }
       } catch (error) {
         console.error("Error fetching parking zones:", error);
@@ -128,7 +138,7 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
     const container = L.DomUtil.get("map");
     if (container) {
       container._leaflet_id = null; // Remove the _leaflet_id to effectively destroy the map instance
-      console.log("Map instance cleaned up using L.DomUtil.get");
+      // console.log("Map instance cleaned up using L.DomUtil.get");
     }
 
     return () => {
@@ -136,7 +146,7 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
       const container = L.DomUtil.get("map");
       if (container) {
         container._leaflet_id = null;
-        console.log("Map instance cleaned up on unmount using L.DomUtil.get");
+        // console.log("Map instance cleaned up on unmount using L.DomUtil.get");
       }
     };
   }, [bikes]); // Trigger cleanup whenever bikes data changes
@@ -159,12 +169,13 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        {/* User location  */}
         <Marker position={userLocation} icon={profileIcon}>
           <Popup>
             🚲 You are here! <br /> Find bikes near your location.
           </Popup>
         </Marker>
-
+        {/* Displaying some parking zones on the map  */}
         {parkingZones.map((city) =>
           city.parking_locations.map((location, index) => {
             const lat = parseFloat(location.latitude as string);
@@ -207,6 +218,7 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
             }
           })
         )}
+                {/* Displaying some bikes on the map  */}
                 {bikes.map((bike) => {
           const locationArray = bike.current_location.split(",");
           // Check if the location is valid before using it
@@ -230,7 +242,7 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
                     </div>
                     <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 bg-brown-dark py-4 hover:bg-brown-light text-white transition-all rounded-lg'>
                     {ridingBikeId === bike.id ? (
-                        <button className="text-xl" onClick={() => handleStop("678d1865343cc5d7109e7ee5", bike.id)}>
+                        <button className="text-xl" onClick={() => handleStop(bike.id)}>
                           Stop Ride ⛔
                         </button>
                       ) : ridingBikeId ? (
@@ -238,7 +250,7 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
                           You already have a different ride started 🫷
                         </button>
                       ) : (
-                        <button className="text-xl" onClick={() => handleStart("678d1865343cc5d7109e7ee5", bike.id)}>
+                        <button className="text-xl" onClick={() => handleStart(bike.id)}>
                           Start Ride 🛴
                         </button>
                       )}
@@ -250,11 +262,11 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
                 </Marker>
               );
             } else {
-              console.warn(`Invalid coordinates for bike ${bike.id}: ${bike.current_location}`);
+              // console.warn(`Invalid coordinates for bike ${bike.id}: ${bike.current_location}`);
               return null; // Return nothing for invalid data
             }
           } else {
-            console.warn(`Invalid location format for bike ${bike.id}: ${bike.current_location}`);
+            // console.warn(`Invalid location format for bike ${bike.id}: ${bike.current_location}`);
             return null; // Return nothing if the format is incorrect
           }
         })}
