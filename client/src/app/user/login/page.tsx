@@ -33,6 +33,7 @@ export default function Login() {
 
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("email", email);
+            localStorage.setItem("user_id", response.data._id);
             setMessage(response.data.message);
 
             window.location.href = "/user";
