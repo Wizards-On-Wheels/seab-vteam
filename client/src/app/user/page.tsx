@@ -19,6 +19,7 @@ export default function UserPage() {
         localStorage.removeItem("user");
         localStorage.removeItem("user_id");
         localStorage.removeItem("email");
+        localStorage.removeItem("oauth");
         localStorage.removeItem("token");
 
         window.location.reload();
