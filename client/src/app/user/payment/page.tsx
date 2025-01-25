@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import { tokenExpired } from '../../MyFunctions.js';
@@ -20,6 +21,7 @@ export default function Payment() {
     const getUserDetails = async () => {
         // const details = await axios.get(`http://localhost:1337/user/details/${user_id}`);
         const details = await axios.get(`http://localhost:1337/user/details/${user_id}`);
+        console.log(details);
 
         setBalance(details.data.result.prepaid_balance);
     }
@@ -48,9 +50,11 @@ export default function Payment() {
         <div>
             <Header />
             <main>
-                <p>Inloggad som:</p>
-                <h1 className='text-4xl'> {localStorage.getItem("email")}</h1>
+                <h2 className='text-2xl font-semibold'>Betalning</h2>
                 <p>Saldo: {balance}</p>
+                <Link href="/user/payment/transaction-log">
+                    <button className="blue-btn">Se betalningshistorik</button>
+                </Link>
                 <p>Fyll på med ett engångsbelopp</p>
                 <form onSubmit={handlePayment} className="change-password-form" >
                     <label htmlFor='username'></label>

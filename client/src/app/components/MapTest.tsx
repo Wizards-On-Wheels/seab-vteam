@@ -22,7 +22,7 @@ export default function MapTest() {
     const longitudes = [];
     const latitudes = [];
 
-    const [countdown, setCountdown] = useState(0);
+    console.log(bikes)
 
     useEffect(() => {
         getDirections();
@@ -32,7 +32,6 @@ export default function MapTest() {
 
     useEffect(() => {
         for (let i=0; i<coordinates.length; i++) {
-            console.log(`${coordinates[i][1]},${coordinates[i][0]}`)
             longitudes.push(coordinates[i][0]);
             latitudes.push(coordinates[i][1]);
         }

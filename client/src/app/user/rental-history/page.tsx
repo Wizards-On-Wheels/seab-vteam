@@ -48,7 +48,7 @@ export default function RentalHistory() {
         <div className="testdiv">
             <Header />
             <main>
-            <h2 className='text-2xl font-semibold'>Uthyrningshistorik för {localStorage.getItem("email")}</h2>
+            <h2 className='text-2xl font-semibold'>Uthyrningshistorik</h2>
             <Table aria-label="Example table">
                 <TableHeader columns={columns}>
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
