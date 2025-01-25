@@ -37,6 +37,10 @@ export default function Register() {
         }
     }
 
+    if (localStorage.getItem("token")) {
+        window.location.href = "/user";
+    }
+
     return (
         <div>
             <Header />

@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import axios from 'axios';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
+import { tokenExpired } from '../../MyFunctions.js';
 
 import '../user.css';
 
@@ -15,8 +15,12 @@ export default function Payment() {
     const [balance, setBalance] = useState(0);
     const [amount, setAmount] = useState(0);
 
+    tokenExpired();
+
     const getUserDetails = async () => {
+        // const details = await axios.get(`http://localhost:1337/user/details/${user_id}`);
         const details = await axios.get(`http://localhost:1337/user/details/${user_id}`);
+
         setBalance(details.data.result.prepaid_balance);
     }
 

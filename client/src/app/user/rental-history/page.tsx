@@ -2,6 +2,7 @@
 
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
+import { tokenExpired } from '../../MyFunctions.js';
 import '../user.css';
 
 import {
@@ -14,31 +15,33 @@ import {
 } from "@nextui-org/table";
 
 export default function RentalHistory() {
-        const columns = [
-    {
-      key: "bike",
-      label: "CYKEL",
-    },
-    {
-      key: "start",
-      label: "START",
-    },
-    {
-      key: "stop",
-      label: "SLUT",
-    },
-    {
-      key: "datetime",
-      label: "STARTTID",
-    },
-    {
-      key: "duration",
-      label: "VARAKTIGHET",
-    },
-    {
-      key: "price",
-      label: "PRIS",
-    },
+    tokenExpired();
+
+    const columns = [
+        {
+            key: "bike",
+            label: "CYKEL",
+        },
+        {
+            key: "start",
+            label: "START",
+        },
+        {
+            key: "stop",
+            label: "SLUT",
+        },
+        {
+            key: "datetime",
+            label: "STARTTID",
+        },
+        {
+            key: "duration",
+            label: "VARAKTIGHET",
+        },
+        {
+            key: "price",
+            label: "PRIS",
+        },
     ];
 
     return (

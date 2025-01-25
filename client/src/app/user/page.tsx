@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { tokenExpired } from '../MyFunctions.js';
 
 import './user.css';
 
@@ -11,16 +12,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faClockRotateLeft, faCreditCard, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 export default function UserPage() {
+    tokenExpired();
+
     const token = localStorage.getItem("token");
 
     const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        localStorage.removeItem("user");
-        localStorage.removeItem("user_id");
-        localStorage.removeItem("email");
-        localStorage.removeItem("oauth");
-        localStorage.removeItem("token");
+        localStorage.clear();
 
         window.location.reload();
     };
