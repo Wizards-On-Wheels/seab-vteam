@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useEffect } from 'react';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import { tokenExpired } from '../../MyFunctions.js';
@@ -17,10 +18,14 @@ import {
 export default function RentalHistory() {
     tokenExpired();
 
+    const user_id = localStorage.getItem("user_id");
+
+    const [rentals, setRentals] = useState([]);
+
     const columns = [
         {
             key: "bike",
-            label: "CYKEL",
+            label: "CYKEL-ID",
         },
         {
             key: "start",
@@ -28,21 +33,34 @@ export default function RentalHistory() {
         },
         {
             key: "stop",
-            label: "SLUT",
+            label: "STOPP",
         },
         {
-            key: "datetime",
+            key: "started",
             label: "STARTTID",
         },
         {
-            key: "duration",
-            label: "VARAKTIGHET",
+            key: "finished",
+            label: "SLUTTID",
         },
         {
             key: "price",
             label: "PRIS",
         },
     ];
+
+    const getRentals = () => {
+        fetch(`http://localhost:1337/user/details/${user_id}`)
+        .then(res => res.json())
+        .then(json => setRentals(json.result.ride_log))
+        .catch((error) => console.log(error))
+    }
+
+    useEffect(() => {
+        getRentals();
+        // eslint-disable-next-line
+    }, []);
+
 
     return (
         <div className="testdiv">
@@ -54,22 +72,19 @@ export default function RentalHistory() {
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
                 <TableBody>
-                    <TableRow key="1">
-                        <TableCell>100000</TableCell>
-                        <TableCell>xxx</TableCell>
-                        <TableCell>yyy</TableCell>
-                        <TableCell>2024-12-11 08:54</TableCell>
-                        <TableCell>15 min</TableCell>
-                        <TableCell>35 kr</TableCell>
-                    </TableRow>
-                    <TableRow key="2">
-                        <TableCell>100001</TableCell>
-                        <TableCell>xxx</TableCell>
-                        <TableCell>yyy</TableCell>
-                        <TableCell>2024-12-13 11:13</TableCell>
-                        <TableCell>17 min</TableCell>
-                        <TableCell>40 kr</TableCell>
-                    </TableRow>
+                    {rentals.map((data, i) => (
+                        <TableRow
+                            key={i}
+                            className="row"
+                        >
+                            <TableCell>{data.bike_id}</TableCell>
+                            <TableCell>{data.location.start.latitude},{data.location.start.longitude}</TableCell>
+                            <TableCell>{data.location.stop.latitude},{data.location.stop.longitude}</TableCell>
+                            <TableCell>{data.time.start}</TableCell>
+                            <TableCell>{data.time.stop}</TableCell>
+                            <TableCell>{data.price}</TableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
             </main>
