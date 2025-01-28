@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import BikeTable from "../../components/AdminBikeTable";
+import BikeTable from "../../components/BikeTable";
 import Link from "next/link";
 
 export default function AdminCyklar() {
