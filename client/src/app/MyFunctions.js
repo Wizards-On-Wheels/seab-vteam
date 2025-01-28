@@ -3,6 +3,8 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
 export function tokenExpired() {
+    if (localStorage.getItem("oauth") === "true") return;
+
     const isTokenExpired = (token) => {
         if (!token) return true;
         try {
