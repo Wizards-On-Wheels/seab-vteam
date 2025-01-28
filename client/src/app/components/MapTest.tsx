@@ -63,7 +63,7 @@ export default function MapTest() {
     const getParkingZones = async () => {
         fetch(`http://localhost:1337/admin/collections/cities/data`)
         .then(res => res.json())
-        .then(json => setCities(json)) //cities.parking_locations.latitude
+        .then(json => setCities(json))
         .catch((error) => console.log(error))
     }
 
@@ -192,60 +192,59 @@ export default function MapTest() {
             <p>Riding bike id: {ridingBikeId}</p>
             <button onClick={() => handleStop("67923c7d4705ba95f00d985e")}>Stop ride</button>
             {/* {coordinates ? <div>{JSON.stringify(coordinates)}</div> : <div>Loading...</div>} */}
-            <button className="change-pwd-btn" onClick={animation} >Start ride</button>
             <MapContainer
                 id="map" // Assign an ID to the map container for DOM manipulation
                 center={[56.162856, 15.586438]}
                 zoom={14}
-                style={{ height: "80%", width: "90%" }}
+                style={{ height: "80%", width: "100%" }}
                 scrollWheelZoom={true}
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-            {cities.map((city) =>
-                city.parking_locations.map((location, index) => {
-                    const lat = parseFloat(location.latitude as string);
-                    const lng = parseFloat(location.longitude as string);
-                    const position: [number, number] = [lat, lng];
-                    const radius = 40; 
-                    const circleOptions = { color: 'steelblue', fillColor: 'blue', fillOpacity: 0.1 };
+                {cities.map((city) =>
+                    city.parking_locations.map((location, index) => {
+                        const lat = parseFloat(location.latitude as string);
+                        const lng = parseFloat(location.longitude as string);
+                        const position: [number, number] = [lat, lng];
+                        const radius = 40; 
+                        const circleOptions = { color: 'steelblue', fillColor: 'blue', fillOpacity: 0.1 };
 
-                    if (!isNaN(lat) && !isNaN(lng) && !location.charging_station) {
-                    return (
-                        <React.Fragment key={index}>
-                        <Marker position={position} icon={customParkingIcon}>
-                            <Popup>
-                            <strong>Parking Location:</strong> {location.address}
-                            <br />
-                            Status: {location.status}
-                            </Popup>
-                        </Marker>
-                        <Circle center={position} radius={radius} pathOptions={circleOptions} />
-                        </React.Fragment>
-                    );
-                    } else if (!isNaN(lat) && !isNaN(lng)) {
-                    return (
-                        <React.Fragment key={index}>
-                        <Marker position={position} icon={customParkingAndCargingIcon}>
-                            <Popup>
-                            <strong>Parking Location:</strong> {location.address}
-                            <br />
-                            Status: {location.status}
-                            <br />
-                            Registered: {location.registered}
-                            </Popup>
-                        </Marker>
-                        <Circle center={position} radius={radius} pathOptions={circleOptions} />
-                        </React.Fragment>
-                    );
-                    } else {
-                    console.warn(`Invalid coordinates for parking location: ${location.address}`);
-                    return null;
-                    }
-                })
-            )}
+                        if (!isNaN(lat) && !isNaN(lng) && !location.charging_station) {
+                            return (
+                                <React.Fragment key={index}>
+                                <Marker position={position} icon={customParkingIcon}>
+                                    <Popup>
+                                    <strong>Parking Location:</strong> {location.address}
+                                    <br />
+                                    Status: {location.status}
+                                    </Popup>
+                                </Marker>
+                                <Circle center={position} radius={radius} pathOptions={circleOptions} />
+                                </React.Fragment>
+                            );
+                        } else if (!isNaN(lat) && !isNaN(lng)) {
+                            return (
+                                <React.Fragment key={index}>
+                                <Marker position={position} icon={customParkingAndCargingIcon}>
+                                    <Popup>
+                                    <strong>Parking Location:</strong> {location.address}
+                                    <br />
+                                    Status: {location.status}
+                                    <br />
+                                    Registered: {location.registered}
+                                    </Popup>
+                                </Marker>
+                                <Circle center={position} radius={radius} pathOptions={circleOptions} />
+                                </React.Fragment>
+                            );
+                        } else {
+                            console.warn(`Invalid coordinates for parking location: ${location.address}`);
+                            return null;
+                        }
+                    })
+                )}
                 {bikes.map((bike, i) => (
                     <Marker position={ridingBikeId ? currentPosition : [bike.current_location.latitude,bike.current_location.longitude]} icon={customIcon} key={i} >
                         <Popup>
@@ -276,6 +275,7 @@ export default function MapTest() {
                 ))}
                 <MyComponent />
             </MapContainer>
+            <button className="change-pwd-btn" onClick={animation} >Start ride</button>
         </div>
     )
 }
