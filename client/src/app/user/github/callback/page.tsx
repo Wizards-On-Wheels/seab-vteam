@@ -62,9 +62,6 @@ export default function GitHubCallback() {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const codeParam = urlParams.get('code');
-        // localStorage.removeItem("token");
-        // localStorage.removeItem("user");
-        // localStorage.removeItem("email");
 
         if (codeParam && (localStorage.getItem("token") === null)) {
             getAccessToken(codeParam);
