@@ -79,8 +79,12 @@ input[type=submit]:hover {
     text-decoration: underline;
 }
 
+.success-message {
+    color: rgb(8, 99, 8);
+}
+
 .error-message {
-    color: red;
+    color: rgb(193, 14, 14);
 }
 
 .change-password-form {
