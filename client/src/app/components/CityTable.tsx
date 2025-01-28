@@ -40,6 +40,16 @@ type City = {
   speed_zones: SpeedZone[]; // Add this type
 };
 
+type Bike = {
+  _id: string;
+  parked: boolean;
+  battery: number;
+  current_location: {
+    longitude: number;
+    latitude: number;
+  };
+};
+
 type CityTableProps = {
   cities: City[];
   expandedCityId: string | null;
@@ -58,6 +68,21 @@ const CityTable: React.FC<CityTableProps & { bikes: Bike[] }> = ({
     { key: "city_registered", label: "REGISTRERAD" },
     { key: "status", label: "STATUS" },
   ];
+
+  // Helper function to calculate distance between two coordinates in meters
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371000;
+    const toRad = (value: number) => (value * Math.PI) / 180;
+
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
 
   return (
     <>
@@ -96,12 +121,18 @@ const CityTable: React.FC<CityTableProps & { bikes: Bike[] }> = ({
                   </TableHeader>
                   <TableBody>
                     {city.parking_locations.map((location, index) => {
-                      const parkedBikes = bikes.filter(
-                        (bike) =>
-                          bike.parked &&
-                          bike.current_location.longitude === parseFloat(location.longitude) &&
-                          bike.current_location.latitude === parseFloat(location.latitude)
-                      );
+                      const parkedBikes = bikes.filter((bike) => {
+                        if (!bike.parked) return false;
+
+                        const distance = calculateDistance(
+                          bike.current_location.latitude,
+                          bike.current_location.longitude,
+                          location.latitude,
+                          location.longitude
+                        );
+
+                        return distance <= 40; // Only include bikes within 100 meters
+                      });
 
                       return (
                         <TableRow key={index}>

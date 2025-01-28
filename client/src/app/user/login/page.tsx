@@ -43,6 +43,10 @@ export default function Login() {
         }
     };
 
+    if (localStorage.getItem("token")) {
+        window.location.href = "/user";
+    }
+
     return (
         <div>
             <Header />

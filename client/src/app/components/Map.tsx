@@ -181,7 +181,7 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
             const lat = parseFloat(location.latitude as string);
             const lng = parseFloat(location.longitude as string);
             const position: [number, number] = [lat, lng];
-            const radius = 100; 
+            const radius = 40; 
             const circleOptions = { color: 'steelblue', fillColor: 'blue', fillOpacity: 0.1 };
 
             if (!isNaN(lat) && !isNaN(lng) && !location.charging_station) {

@@ -2,8 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { tokenExpired } from '../MyFunctions.js';
 
 import './user.css';
 
@@ -11,16 +13,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faClockRotateLeft, faCreditCard, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 export default function UserPage() {
+    tokenExpired();
+
     const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
 
     const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        localStorage.removeItem("user");
-        localStorage.removeItem("user_id");
-        localStorage.removeItem("email");
-        localStorage.removeItem("oauth");
-        localStorage.removeItem("token");
+        try {
+            await axios.post(`http://localhost:1337/oauth/logout`, {
+                email: email
+            });
+
+            localStorage.clear();
+        } catch (error) {
+            console.log(error);
+        }
 
         window.location.reload();
     };
@@ -35,8 +44,7 @@ export default function UserPage() {
         <div>
             <Header />
             <main>
-                <p>Inloggad som</p>
-                <h1 className='text-4xl'> {localStorage.getItem("email")}</h1>
+                <h2 className='text-2xl font-semibold'>Mina sidor</h2>
                 {/* <div className='flex gap-4 mt-4'> */}
                 {/* <div className='flex flex-col items-center justify-items-center gap-4 w-60 h-27 border-solid border-2 py-4'> */}
                 <div className="user-div" >

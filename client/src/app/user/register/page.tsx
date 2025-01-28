@@ -37,6 +37,10 @@ export default function Register() {
         }
     }
 
+    if (localStorage.getItem("token")) {
+        window.location.href = "/user";
+    }
+
     return (
         <div>
             <Header />
@@ -45,7 +49,7 @@ export default function Register() {
                     <img src="../../images/road.jpg"></img>
                     <div className="login">
                         <div className="my-4">
-                            <h2>Skapa konto</h2>
+                            <h2 className='text-2xl font-semibold'>Skapa konto</h2>
                         </div>
                         <form onSubmit={handleRegister} className="login-form">
                             <label htmlFor='username'></label>
