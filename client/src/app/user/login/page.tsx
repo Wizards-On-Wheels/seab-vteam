@@ -20,6 +20,7 @@ export default function Login() {
 
     // Message when login fails
     const [message, setMessage] = useState("");
+    const [success, setSuccess] = useState(false);
 
     // eslint-disable-next-line
     const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,6 +36,7 @@ export default function Login() {
             localStorage.setItem("email", email);
             localStorage.setItem("user_id", response.data._id);
             setMessage(response.data.message);
+            setSuccess(true);
 
             window.location.href = "/user";
 
@@ -86,7 +88,7 @@ export default function Login() {
                             <input type="submit" value="LOGGA IN" />
                         </form>
                         <p>Inte medlem än? <span className="register"><Link href="/user/register" >Registrera dig här</Link></span></p>
-                        <p className="error-message" >{message}</p>
+                        <p className={success ? 'success-message' : 'error-message'} >{message}</p>
                     </div>
                 </div>
             </main>

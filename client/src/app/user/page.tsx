@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import Footer from '../components/Footer';
-import Header from '../components/Header';
+import UserHeader from '../components/UserHeader';
 import { tokenExpired } from '../MyFunctions.js';
 
 import './user.css';
@@ -20,6 +20,11 @@ export default function UserPage() {
 
     const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+
+        if (localStorage.getItem("oauth") === "true") {
+            localStorage.clear();
+            window.location.reload();
+        }
 
         try {
             await axios.post(`http://localhost:1337/oauth/logout`, {
@@ -42,11 +47,9 @@ export default function UserPage() {
 
     return (
         <div>
-            <Header />
+            <UserHeader />
             <main>
                 <h2 className='text-2xl font-semibold'>Mina sidor</h2>
-                {/* <div className='flex gap-4 mt-4'> */}
-                {/* <div className='flex flex-col items-center justify-items-center gap-4 w-60 h-27 border-solid border-2 py-4'> */}
                 <div className="user-div" >
                     <Link href="/user/profile">
                     <div className='user-small-div'>

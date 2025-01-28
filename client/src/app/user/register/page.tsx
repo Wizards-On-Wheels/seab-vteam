@@ -16,6 +16,7 @@ export default function Register() {
 
     // Message when login fails
     const [message, setMessage] = useState("");
+    const [success, setSuccess] = useState(false);
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -27,7 +28,12 @@ export default function Register() {
                     password: password
                 });
 
-                alert(response.data.message);
+                setSuccess(true);
+                setPassword("");
+                setRepeatedPassword("");
+                setMessage(response.data.message);
+
+                // alert(response.data.message);
             } catch (error) {
                 setMessage(error.response.data.error);
             }
@@ -87,7 +93,7 @@ export default function Register() {
                             <input type="submit" value="REGISTRERA" />
                         </form>
                         <p>Redan medlem? <span className="register"><Link href="/user/login">Logga in här</Link></span></p>
-                        <p className="error-message" >{message}</p>
+                        <p className={success ? 'success-message' : 'error-message'} >{message}</p>
                     </div>
                 </div>
             </main>

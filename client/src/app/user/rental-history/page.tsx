@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Footer from '../../components/Footer';
-import Header from '../../components/Header';
+import UserHeader from '../../components/UserHeader';
 import { tokenExpired } from '../../MyFunctions.js';
 import '../user.css';
 
@@ -64,7 +64,7 @@ export default function RentalHistory() {
 
     return (
         <div className="testdiv">
-            <Header />
+            <UserHeader />
             <main>
             <h2 className='text-2xl font-semibold'>Uthyrningshistorik</h2>
             <Table aria-label="Example table">

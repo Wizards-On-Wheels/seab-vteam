@@ -11,19 +11,6 @@ import MapTestOld from "../../components/MapTestOld";
 import '../user.css';
 
 export default function MapTesting() {
-    const [bikes, setBikes] = useState([]);
-
-    const getBikes = async () => {
-        fetch(`http://localhost:1337/admin/collections/bikes/data`)
-        .then(res => res.json())
-        .then(json => setBikes(json))
-        .catch((error) => console.log(error))
-    }
-
-    useEffect(() => {
-        getBikes();
-    }, []);
-
     // function MyComponent() {
     //     const map = useMap();
     //     const mapEvent = useMapEvents({

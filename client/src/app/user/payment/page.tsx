@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Footer from '../../components/Footer';
-import Header from '../../components/Header';
+import UserHeader from '../../components/UserHeader';
 import { tokenExpired } from '../../MyFunctions.js';
 
 import '../user.css';
@@ -48,7 +48,7 @@ export default function Payment() {
 
     return (
         <div>
-            <Header />
+            <UserHeader />
             <main>
                 <h2 className='text-2xl font-semibold'>Betalning</h2>
                 <p>Saldo: {balance}</p>
