@@ -97,27 +97,26 @@ export default function UserTable({ userData }: UserTableProps) {
           },
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
-      // Update the suspended status of the user locally
+
       setSortedData((prevData) =>
         prevData.map((user) =>
           user._id === userId
-            ? { ...user, account_suspended: true } // Mark user as suspended
+            ? { ...user, account_suspended: true }
             : user
         )
       );
-  
+
       alert(`User ${userId} has been suspended.`);
     } catch (error) {
       console.error("Error suspending user:", error);
       alert("Failed to suspend user. Please try again.");
     }
   };
-  
+
   const handleRevokeSuspension = async (userId: string) => {
     try {
       const response = await fetch(
@@ -129,20 +128,19 @@ export default function UserTable({ userData }: UserTableProps) {
           },
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
-      // Update the suspended status of the user locally
+
       setSortedData((prevData) =>
         prevData.map((user) =>
           user._id === userId
-            ? { ...user, account_suspended: false } // Revoke suspension
+            ? { ...user, account_suspended: false }
             : user
         )
       );
-  
+
       alert(`User ${userId} has had their suspension revoked.`);
     } catch (error) {
       console.error("Error revoking suspension on user:", error);
@@ -150,10 +148,11 @@ export default function UserTable({ userData }: UserTableProps) {
     }
   };
 
-
-
-  const filteredData = sortedData.filter((user) =>
-    user.name.toLowerCase().includes(searchQuery)
+  // Filter data by name OR email based on the search query
+  const filteredData = sortedData.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchQuery) ||
+      user.email.toLowerCase().includes(searchQuery)
   );
 
   const columns = [
@@ -166,89 +165,87 @@ export default function UserTable({ userData }: UserTableProps) {
   ];
 
   return (
-<div className="w-full max-w-screen-xl mx-auto">
-  <div className="mb-4">
-    <input
-      type="text"
-      placeholder="Sök efter namn..."
-      value={searchQuery}
-      onChange={handleSearch}
-      className="border rounded p-2 w-full"
-    />
-  </div>
-  <Table aria-label="User management table" className="w-full">
-    <TableHeader columns={columns}>
-      {(column) => (
-        <TableColumn
-          key={column.key}
-          onClick={column.key === "name" ? handleNameSort : undefined}
-          style={{
-            cursor: column.key === "name" ? "pointer" : "default",
-          }}
-        >
-          {column.label}
-          {column.key === "name" && (
-            <span style={{ marginLeft: "8px" }}>{getSortIndicator()}</span>
+    <div className="w-full max-w-screen-xl mx-auto">
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Sök efter namn eller e-post..."
+          value={searchQuery}
+          onChange={handleSearch}
+          className="border rounded p-2 w-full"
+        />
+      </div>
+      <Table aria-label="User management table" className="w-full">
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn
+              key={column.key}
+              onClick={column.key === "name" ? handleNameSort : undefined}
+              style={{
+                cursor: column.key === "name" ? "pointer" : "default",
+              }}
+            >
+              {column.label}
+              {column.key === "name" && (
+                <span style={{ marginLeft: "8px" }}>{getSortIndicator()}</span>
+              )}
+            </TableColumn>
           )}
-        </TableColumn>
-      )}
-    </TableHeader>
-    <TableBody>
-      {filteredData.map((user) => (
-        <TableRow
-  key={user._id}
-  className={`border-b border-gray-300 ${
-    user.account_suspended === true
-      ? "bg-red-100 hover:bg-red-200"
-      : "hover:bg-gray-100"
-  }`}
->
-  <TableCell>{user._id}</TableCell>
-  <TableCell>{user.name || "N/A"}</TableCell>
-  <TableCell>{user.email}</TableCell>
-  <TableCell>{user.prepaid_balance}</TableCell>
-  <TableCell>{user.monthly_debt}</TableCell>
-  <TableCell>
-    <div className="flex items-center gap-2 flex-wrap">
-      <input
-        type="number"
-        min="0"
-        placeholder="Lägg till saldo.."
-        className="border rounded p-1"
-        value={tempBalances[user._id] || ""}
-        onChange={(e) =>
-          setTempBalances((prev) => ({
-            ...prev,
-            [user._id]: Number(e.target.value),
-          }))
-        }
-      />
-      <button
-        className="px-6 py-1 bg-green-500 text-white rounded hover:bg-green-600 whitespace-nowrap"
-        onClick={() => handleUpdateBalance(user._id, user.email)}
-      >
-        Lägg till
-      </button>
-      <button
-        className="px-6 py-1 bg-red-500 text-white rounded hover:bg-red-600 whitespace-nowrap"
-        onClick={() => handleSuspendUser(user._id)}
-      >
-        Suspend
-      </button>
-      <button
-        className="px-6 py-1 bg-orange-500 text-white rounded hover:bg-orange-600 whitespace-nowrap"
-        onClick={() => handleRevokeSuspension(user._id)}
-      >
-        Revoke
-      </button>
+        </TableHeader>
+        <TableBody>
+          {filteredData.map((user) => (
+            <TableRow
+              key={user._id}
+              className={`border-b border-gray-300 ${
+                user.account_suspended === true
+                  ? "bg-red-100 hover:bg-red-200"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              <TableCell>{user._id}</TableCell>
+              <TableCell>{user.name || "N/A"}</TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.prepaid_balance}</TableCell>
+              <TableCell>{user.monthly_debt}</TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="Lägg till saldo.."
+                    className="border rounded p-1"
+                    value={tempBalances[user._id] || ""}
+                    onChange={(e) =>
+                      setTempBalances((prev) => ({
+                        ...prev,
+                        [user._id]: Number(e.target.value),
+                      }))
+                    }
+                  />
+                  <button
+                    className="px-6 py-1 bg-green-500 text-white rounded hover:bg-green-600 whitespace-nowrap"
+                    onClick={() => handleUpdateBalance(user._id, user.email)}
+                  >
+                    Lägg till
+                  </button>
+                  <button
+                    className="px-6 py-1 bg-red-500 text-white rounded hover:bg-red-600 whitespace-nowrap"
+                    onClick={() => handleSuspendUser(user._id)}
+                  >
+                    Suspend
+                  </button>
+                  <button
+                    className="px-6 py-1 bg-orange-500 text-white rounded hover:bg-orange-600 whitespace-nowrap"
+                    onClick={() => handleRevokeSuspension(user._id)}
+                  >
+                    Revoke
+                  </button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
-  </TableCell>
-</TableRow>
-
-      ))}
-    </TableBody>
-  </Table>
-</div>
-
   );
 }
