@@ -10,13 +10,14 @@ import {
 
 type Bike = {
   id: string;
-  status: string;
+  registered: string;
   city: string;
   current_location: string;
+  status: string;
   battery: number;
   parked: string;
   rented: string;
-  registered: string;
+  disabled: boolean;
 };
 
 type BikeTableProps = {
@@ -25,8 +26,6 @@ type BikeTableProps = {
 
 export default function BikeTable({ data }: BikeTableProps) {
   const [sortedData, setSortedData] = useState<Bike[]>([]);
-  const [batterySortOrder, setBatterySortOrder] = useState<"asc" | "desc">("asc");
-  const [locationSortOrder, setLocationSortOrder] = useState<"asc" | "desc">("asc");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
@@ -34,42 +33,68 @@ export default function BikeTable({ data }: BikeTableProps) {
     setSortedData(sorted);
   }, [data]);
 
-  const handleBatterySort = () => {
-    const sorted = [...sortedData].sort((a, b) =>
-      batterySortOrder === "asc" ? a.battery - b.battery : b.battery - a.battery
-    );
-    setSortedData(sorted);
-    setBatterySortOrder(batterySortOrder === "asc" ? "desc" : "asc");
-  };
-
-  const handleLocationSort = () => {
-    const sorted = [...sortedData].sort((a, b) => {
-      if (a.city && b.city) {
-        return locationSortOrder === "asc"
-          ? a.city.localeCompare(b.city)
-          : b.city.localeCompare(a.city);
-      }
-      return 0; // Handle undefined city gracefully
-    });
-    setSortedData(sorted);
-    setLocationSortOrder(locationSortOrder === "asc" ? "desc" : "asc");
-  };
-
-  const getSortIndicator = (columnKey: "battery" | "city") => {
-    if (columnKey === "battery") {
-      return batterySortOrder === "asc" ? "▲" : "▼";
-    }
-    if (columnKey === "city") {
-      return locationSortOrder === "asc" ? "▲" : "▼";
-    }
-    return null;
-  };
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value.toLowerCase());
   };
 
-  // Filter bikes by ID based on search query
+  const handleDisableBike = async (bikeId: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:1337/admin/bike/${bikeId}/disable`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      setSortedData((prevData) =>
+        prevData.map((bike) =>
+          bike.id === bikeId ? { ...bike, disabled: true } : bike
+        )
+      );
+
+      alert(`Bike ${bikeId} has been disabled.`);
+    } catch (error) {
+      console.error("Error disabling bike:", error);
+      alert("Failed to disable the bike. Please try again.");
+    }
+  };
+
+  const handleEnableBike = async (bikeId: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:1337/admin/bike/${bikeId}/enable`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      setSortedData((prevData) =>
+        prevData.map((bike) =>
+          bike.id === bikeId ? { ...bike, disabled: false } : bike
+        )
+      );
+
+      alert(`Bike ${bikeId} has been enabled.`);
+    } catch (error) {
+      console.error("Error enabling bike:", error);
+      alert("Failed to enable the bike. Please try again.");
+    }
+  };
+
   const filteredData = sortedData.filter((bike) =>
     bike.id.toLowerCase().includes(searchQuery)
   );
@@ -83,13 +108,8 @@ export default function BikeTable({ data }: BikeTableProps) {
     { key: "battery", label: "BATTERI" },
     { key: "parked", label: "PARKERAD" },
     { key: "rented", label: "UTHYRD" },
+    { key: "actions", label: "ÅTGÄRDER" },
   ];
-
-  const noWrapStyle = {
-    whiteSpace: "nowrap", // Prevent text from wrapping
-    overflow: "hidden",   // Hide overflowing text
-    textOverflow: "ellipsis", // Display ellipsis (...) for overflowed text
-  };
 
   return (
     <div className="w-full overflow-x-auto">
@@ -102,44 +122,45 @@ export default function BikeTable({ data }: BikeTableProps) {
           className="border rounded p-2 w-full"
         />
       </div>
-      <Table aria-label="Bike management table">
+      <Table aria-label="Bike management table" className="w-full">
         <TableHeader columns={columns}>
           {(column) => (
-            <TableColumn
-              key={column.key}
-              onClick={
-                column.key === "battery"
-                  ? handleBatterySort
-                  : column.key === "city"
-                  ? handleLocationSort
-                  : undefined
-              }
-              style={{
-                cursor: ["battery", "city"].includes(column.key)
-                  ? "pointer"
-                  : "default",
-              }}
-            >
-              {column.label}
-              {["battery", "city"].includes(column.key) && (
-                <span style={{ marginLeft: "8px" }}>
-                  {getSortIndicator(column.key as "battery" | "city")}
-                </span>
-              )}
-            </TableColumn>
+            <TableColumn key={column.key}>{column.label}</TableColumn>
           )}
         </TableHeader>
         <TableBody>
           {filteredData.map((bike) => (
-            <TableRow key={bike.id}>
-              <TableCell style={noWrapStyle}>{bike.id}</TableCell>
-              <TableCell style={noWrapStyle}>{bike.registered}</TableCell>
-              <TableCell style={noWrapStyle}>{bike.city}</TableCell>
-              <TableCell style={noWrapStyle}>{bike.current_location}</TableCell>
-              <TableCell style={noWrapStyle}>{bike.status}</TableCell>
-              <TableCell style={noWrapStyle}>{bike.battery}%</TableCell>
-              <TableCell style={noWrapStyle}>{bike.parked}</TableCell>
-              <TableCell style={noWrapStyle}>{bike.rented}</TableCell>
+            <TableRow
+              key={bike.id}
+              className="border-b border-gray-300 hover:bg-gray-100"
+            >
+              <TableCell>{bike.id}</TableCell>
+              <TableCell>{bike.registered}</TableCell>
+              <TableCell>{bike.city}</TableCell>
+              <TableCell>{bike.current_location}</TableCell>
+              <TableCell>{bike.status}</TableCell>
+              <TableCell>{bike.battery}%</TableCell>
+              <TableCell>{bike.parked}</TableCell>
+              <TableCell>{bike.rented}</TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {bike.disabled ? (
+                    <button
+                      className="px-4 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                      onClick={() => handleEnableBike(bike.id)}
+                    >
+                      Enable
+                    </button>
+                  ) : (
+                    <button
+                      className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                      onClick={() => handleDisableBike(bike.id)}
+                    >
+                      Disable
+                    </button>
+                  )}
+                </div>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
