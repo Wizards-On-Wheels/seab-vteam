@@ -15,6 +15,11 @@ export default function UserHeader() {
     const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
+        if (localStorage.getItem("oauth") === "true") {
+            localStorage.clear();
+            window.location.reload();
+        }
+
         try {
             await axios.post(`http://localhost:1337/oauth/logout`, {
                 email: email
