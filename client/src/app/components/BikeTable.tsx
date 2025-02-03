@@ -30,10 +30,11 @@ export default function BikeTable({ data }: BikeTableProps) {
   const [isMoveBikeModalOpen, setMoveBikeModalOpen] = useState(false);
   const [selectedBikeId, setSelectedBikeId] = useState<string | null>(null);
   const [chargingStations, setChargingStations] = useState<any[]>([]);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [selectedStation, setSelectedStation] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Hämta laddstationer
+  // Hämta laddstationer och städer
   useEffect(() => {
     const fetchChargingStations = async () => {
       try {
@@ -42,16 +43,7 @@ export default function BikeTable({ data }: BikeTableProps) {
           throw new Error("Failed to fetch cities data");
         }
         const cities = await response.json();
-        const stations = cities.flatMap(city =>
-          city.parking_locations
-            .filter(spot => spot.charging_station === true)
-            .map(spot => ({
-              address: spot.address,
-              longitude: spot.longitude,
-              latitude: spot.latitude,
-            }))
-        );
-        setChargingStations(stations);
+        setChargingStations(cities);
       } catch (error) {
         console.error("Error fetching charging stations:", error);
       } finally {
@@ -135,6 +127,14 @@ export default function BikeTable({ data }: BikeTableProps) {
   const handleCloseModal = () => {
     setMoveBikeModalOpen(false);
     setSelectedBikeId(null);
+    setSelectedCity(null);
+    setSelectedStation(null);
+  };
+
+  const handleCityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const city = event.target.value;
+    setSelectedCity(city);
+    setSelectedStation(null); // Reset station when city is changed
   };
 
   const handleBikeMoved = async (latitude: number, longitude: number) => {
@@ -254,25 +254,52 @@ export default function BikeTable({ data }: BikeTableProps) {
             ) : (
               <form onSubmit={(e) => e.preventDefault()}>
                 <div className="mb-4">
-                  <label className="block mb-1">Välj en laddstation:</label>
+                  <label className="block mb-1">Välj stad:</label>
                   <select
-                    onChange={(e) => {
-                      const selected = chargingStations.find(
-                        (station) => station.address === e.target.value
-                      );
-                      setSelectedStation(selected || null);
-                    }}
-                    value={selectedStation ? selectedStation.address : ""}
+                    value={selectedCity || ""}
+                    onChange={handleCityChange}
                     className="w-full px-3 py-2 border rounded-md"
                   >
-                    <option value="">Välj en laddstation</option>
-                    {chargingStations.map((station, index) => (
-                      <option key={index} value={station.address}>
-                        {station.address}
+                    <option value="">Välj en stad</option>
+                    {chargingStations.map((city, index) => (
+                      <option key={index} value={city.city}>
+                        {city.city}
                       </option>
                     ))}
                   </select>
                 </div>
+
+                {selectedCity && (
+                  <div className="mb-4">
+                    <label className="block mb-1">Välj en laddstation:</label>
+                    <select
+                      onChange={(e) => {
+                        const cityData = chargingStations.find(
+                          (city) => city.city === selectedCity
+                        );
+                        const station = cityData?.parking_locations.find(
+                          (spot) => spot.address === e.target.value
+                        );
+                        setSelectedStation(station || null);
+                      }}
+                      value={selectedStation ? selectedStation.address : ""}
+                      className="w-full px-3 py-2 border rounded-md"
+                    >
+                      <option value="">Välj en laddstation</option>
+                      {chargingStations
+                        .find((city) => city.city === selectedCity)
+                        ?.parking_locations.filter(
+                          (spot) => spot.charging_station === true
+                        )
+                        .map((station, index) => (
+                          <option key={index} value={station.address}>
+                            {station.address}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                )}
+
                 <div className="flex justify-end gap-4">
                   <button
                     type="button"
