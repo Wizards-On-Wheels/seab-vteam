@@ -66,7 +66,7 @@ const CityTable: React.FC<CityTableProps & { bikes: Bike[] }> = ({
     { key: "id", label: "STADS ID" },
     { key: "city", label: "STAD" },
     { key: "city_registered", label: "REGISTRERAD" },
-    { key: "status", label: "STATUS" },
+    { key: "charging_station", label: "CHARGING" }, // charging_station column
   ];
 
   // Helper function to calculate distance between two coordinates in meters
@@ -97,7 +97,10 @@ const CityTable: React.FC<CityTableProps & { bikes: Bike[] }> = ({
               <TableCell>{city._id}</TableCell>
               <TableCell>{city.city}</TableCell>
               <TableCell>{city.city_registered}</TableCell>
-              <TableCell>{city.status}</TableCell>
+              <TableCell>
+                {/* Check if any parking location has a charging station */}
+                {city.parking_locations.some(location => location.charging_station) ? "Yes" : "No"}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -115,7 +118,7 @@ const CityTable: React.FC<CityTableProps & { bikes: Bike[] }> = ({
                   <TableHeader>
                     <TableColumn>Adress</TableColumn>
                     <TableColumn>Registrerad</TableColumn>
-                    <TableColumn>Status</TableColumn>
+                    <TableColumn>Charging</TableColumn>
                     <TableColumn>Koordinater</TableColumn>
                     <TableColumn>Bikes Parked</TableColumn>
                   </TableHeader>
@@ -131,14 +134,14 @@ const CityTable: React.FC<CityTableProps & { bikes: Bike[] }> = ({
                           location.longitude
                         );
 
-                        return distance <= 40; // Only include bikes within 100 meters
+                        return distance <= 40; // Only include bikes within 40 meters
                       });
 
                       return (
                         <TableRow key={index}>
                           <TableCell>{location.address}</TableCell>
                           <TableCell>{location.registered}</TableCell>
-                          <TableCell>{location.status}</TableCell>
+                          <TableCell>{location.charging_station ? "Yes" : "No"}</TableCell>
                           <TableCell>{`${location.latitude}, ${location.longitude}`}</TableCell>
                           <TableCell>
                             {parkedBikes.length > 0 ? (
