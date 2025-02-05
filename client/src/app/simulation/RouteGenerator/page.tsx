@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import "leaflet/dist/leaflet.css";
 
-import RouteGenerator from '../components/RouteGenerator';
+import RouteGenerator from '../../components/RouteGenerator';
 
-export default function Test() {
+export default function Route() {
     return (
         <>
+            {/* <MapTestNew /> */}
             <RouteGenerator />
         </>
     )

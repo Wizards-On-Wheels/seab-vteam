@@ -78,13 +78,14 @@
     }
     h2 {
         font-size: 22px;
+        margin-right: 20px;
     }
     .right-div {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        width: 270px;
+        width: auto;
     }
 }
 
@@ -94,4 +95,8 @@
 
 .error-message {
     color: rgb(193, 14, 14);
+}
+
+.info-div {
+    padding: 15px;
 }

@@ -20,10 +20,9 @@ export default function Payment() {
 
     const getUserDetails = async () => {
         // const details = await axios.get(`http://localhost:1337/user/details/${user_id}`);
-        const details = await axios.get(`http://localhost:1337/user/details/${user_id}`);
-        console.log(details);
+        const response = await axios.get(`http://localhost:1337/user/details/${user_id}`);
 
-        setBalance(details.data.result.prepaid_balance);
+        setBalance(response.data.result.prepaid_balance);
     }
 
     const handlePayment = async (e: React.FormEvent<HTMLFormElement>) => {

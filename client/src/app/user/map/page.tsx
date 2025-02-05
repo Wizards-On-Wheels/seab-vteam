@@ -1,17 +1,18 @@
+"use client";
+
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { io } from "socket.io-client";
-import { customIcon, customParkingIcon, customParkingAndCargingIcon, profileIcon } from './Icons';
+import { customIcon, customParkingIcon, customParkingAndCargingIcon } from '../../components/Icons';
 
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Circle } from "react-leaflet";
-import { useMap } from 'react-leaflet/hooks';
-import { StopBike, StartBike, GetParkingZones } from "./start-stop-ride";
+import { StopBike, StartBike } from "../../components/start-stop-ride";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-import '../user/user.css';
+import '../user.css';
 
-export default function MapTest() {
+export default function UserMap() {
     const api_key="5b3ce3597851110001cf624867c121a4001444dcbafd925164cfb40e";
     const userID = localStorage.getItem("user_id");
 
@@ -24,18 +25,11 @@ export default function MapTest() {
     const [bikes, setBikes] = useState([]);
     const [cities, setCities] = useState([]);
     const [ridingBikeID, setRidingBikeID] = useState<string | undefined>(undefined);
-    const [cost, setCost] = useState(0);
+
+    const [message, setMessage] = useState("");
+    const [suspended, setSuspended] = useState(false);
 
     const socket = useRef(null);
-
-    const [currentPosition, setCurrentPosition] = useState([]);
-
-    // const getBikes = async () => {
-    //     fetch(`http://localhost:1337/admin/collections/bikes/data`)
-    //     .then(res => res.json())
-    //     .then(json => setBikes(json))
-    //     .catch((error) => console.log(error))
-    // }
 
     const getParkingZones = async () => {
         fetch(`http://localhost:1337/admin/collections/cities/data`)
@@ -44,8 +38,17 @@ export default function MapTest() {
         .catch((error) => console.log(error))
     }
 
+    const getUserDetails = async () => {
+        const response = await axios.get(`http://localhost:1337/user/details/${userID}`);
+
+        if (response.data.result.account_suspended) {
+            setSuspended(true);
+        }
+    }
+
     useEffect(() => {
         getParkingZones();
+        getUserDetails();
 
     }, []);
 
@@ -67,23 +70,18 @@ export default function MapTest() {
         const response = await StopBike(userID, bikeID);
         if (response === 200) {
             setRidingBikeID(undefined);
-            //await axios.put(`http://localhost:1337/bike/${bikeID}/position/${stopPosition.split(",")[0]}/${stopPosition.split(",")[1]}`);
+            setMessage("Resan har avslutats!")
         }
     };
 
     const startRide = () => {
-        if (stopPosition !== "") {
-            if (ridingbikeID) {
-                console.log("ride started")
-                console.log(startPosition)
-                console.log(stopPosition)
-                getDirections();
-            }
+        if (stopPosition !== "" && ridingBikeID) {
+            console.log("Ride started")
+            getDirections();
         }
     }
 
     const MapClicking = () => {
-        //const map = useMap(); // behövs den här?
         const mapEvent = useMapEvents({
             click: (e) => {
                 const { lat, lng } = e.latlng;
@@ -175,13 +173,13 @@ export default function MapTest() {
 
     return (
         <div className="w-full h-[100vh] rounded-lg overflow-hidden shadow-md z-30 fixed">
-            <button className="change-pwd-btn" onClick={() => handleStop("67a07b9ccde493097de81386")}>Stop ride</button>
+            <button className="change-pwd-btn" onClick={() => handleStop("67a3173b6c1d4e48a0cfb184")}>Stop ride (den här knappen ska tas bort)</button>
             <MapContainer
                 id="map"
                 center={[56.162856, 15.586438]} // karlskrona
                 //center={[57.707445, 11.965957]} // göteborg
                 zoom={14}
-                style={{ height: "70%", width: "100%" }}
+                style={{ height: "60%", width: "100%" }}
                 scrollWheelZoom={true}
             >
                 <TileLayer
@@ -193,18 +191,17 @@ export default function MapTest() {
                         <React.Fragment key={index}>
                             <Marker position={[location.latitude, location.longitude]} icon={location.charging_station ? customParkingAndCargingIcon : customParkingIcon}>
                                 <Popup>
-                                    <strong>Parking Location:</strong> {location.address}
+                                    <strong>Parkingsplats:</strong> {location.address}
                                     <br />
                                     Status: {location.status}
                                     <br />
-                                    Registered: {location.registered}
+                                    Registrerad: {location.registered}
                                 </Popup>
                             </Marker>
                             <Circle center={[location.latitude, location.longitude]} radius={40} pathOptions={{ color: 'steelblue', fillColor: 'blue', fillOpacity: 0.1 }} />
                         </React.Fragment>
                 )))}
                 {bikes.map((bike, index) => (
-                    //<Marker position={ridingBikeId ? currentPosition : [bike.current_location.latitude,bike.current_location.longitude]} icon={customIcon} key={i} >
                     <Marker
                         key={index}
                         position={[bike.current_location.latitude,bike.current_location.longitude]}
@@ -220,15 +217,17 @@ export default function MapTest() {
                             <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 bg-brown-dark py-4 hover:bg-brown-light text-white transition-all rounded-lg'>
                                 {ridingBikeID === bike._id ? (
                                     <button className="text-xl" onClick={() => handleStop(bike._id)}>
-                                    Stop Ride ⛔
+                                    Stoppa åktur ⛔
                                     </button>
                                 ) : ridingBikeID ? (
                                     <button className="text-xl" disabled>
-                                    You already have a different ride started 🫷
+                                    Du har redan en aktiv uthyrning 🫷
                                     </button>
+                                ) : suspended ? (
+                                    <p className="text-xl">Uthyrning ej tillgänglig</p>
                                 ) : (
                                     <button className="text-xl" onClick={() => handleStart(bike._id, bike.current_location.latitude, bike.current_location.longitude)}>
-                                    Start Ride 🛴
+                                    Lås upp cykel 🛴
                                     </button>
                                 )}
                             </div>
@@ -237,12 +236,22 @@ export default function MapTest() {
                 ))}
                 <MapClicking />
             </MapContainer>
-            <button className="change-pwd-btn" onClick={animation} >Start ride</button>
-            <h2 className="text-2xl font-semibold">Välkommen, {localStorage.getItem("email")}!</h2>
-            <strong>Cykel-ID: {ridingBikeID} </strong>
-            <p>Start: {startPosition} </p>
-            <p>Stopp: {stopPosition} </p>
-            <p>Kostnad: {} </p>
+            <button className="change-pwd-btn" onClick={animation} disabled={ suspended ? true : false } >Kör!</button>
+            {suspended ?
+                <div className="info-div" >
+                    <h2 className="text-1xl font-semibold">Välkommen, {localStorage.getItem("email")}!</h2>
+                    <p className="error-message">Ditt konto är avstängt</p>
+                </div>
+                :
+                <div className="info-div" >
+                    <h2 className="text-1xl font-semibold">Välkommen, {localStorage.getItem("email")}!</h2>
+                    <p>Cykel-ID: {ridingBikeID} </p>
+                    <p>Start: {startPosition} </p>
+                    <p>Stopp: {stopPosition} </p>
+                    <p className="success-message">{message}</p>
+                </div>
+        }
+
         </div>
     )
 }
