@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import Footer from './components/Footer';
@@ -22,7 +22,22 @@ export default function Home() {
     const [message, setMessage] = useState("");
     const [success, setSuccess] = useState(false);
 
-    // eslint-disable-next-line
+    useEffect(() => {
+        // Ensure localStorage is clear
+        const token = localStorage.getItem("token");
+        const storedEmail = localStorage.getItem("email");
+
+        // If no token, do nothing and stay on the login page
+        if (!token) return;
+
+        // Redirect based on token and email
+        if (storedEmail && storedEmail.toLowerCase() === "admin1") {
+            window.location.href = "/admin";
+        } else {
+            window.location.href = "/user";
+        }
+    }, []); // Empty dependency array ensures this runs only once when component mounts
+
     const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -38,16 +53,17 @@ export default function Home() {
             setMessage(response.data.message);
             setSuccess(true);
 
-            window.location.href = "/user";
+            // Redirect based on email check
+            if (email.toLowerCase() === "admin1") {
+                window.location.href = "/admin";
+            } else {
+                window.location.href = "/user";
+            }
 
         } catch (error) {
-            setMessage(error.response.data.message)
+            setMessage(error.response.data.message);
         }
     };
-
-    if (localStorage.getItem("token")) {
-        window.location.href = "/user";
-    }
 
     return (
         <div>

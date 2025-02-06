@@ -6,7 +6,7 @@ import axios from 'axios';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 
-import '../login/login.css';
+import '../../login.css';
 
 export default function Register() {
     // Used for login form
@@ -92,7 +92,7 @@ export default function Register() {
                             />
                             <input type="submit" value="REGISTRERA" />
                         </form>
-                        <p>Redan medlem? <span className="register"><Link href="/user/login">Logga in här</Link></span></p>
+                        <p>Redan medlem? <span className="register"><Link href="/">Logga in här</Link></span></p>
                         <p className={success ? 'success-message' : 'error-message'} >{message}</p>
                     </div>
                 </div>
