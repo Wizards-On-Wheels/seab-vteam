@@ -48,56 +48,65 @@ export default function Register() {
     }
 
     return (
-        <div>
+        <div
+            className="min-h-screen flex flex-col justify-between bg-cover bg-center bg-no-repeat bg-fixed"
+            style={{ backgroundImage: "url('/images/admin-background.jpg')" }}
+        >
             <Header />
-            <main>
-                <div className='login-div'>
-                    <img src="../../images/road.jpg"></img>
-                    <div className="login">
-                        <div className="my-4">
-                            <h2 className='text-2xl font-semibold'>Skapa konto</h2>
-                        </div>
-                        <form onSubmit={handleRegister} className="login-form">
-                            <label htmlFor='username'></label>
-                            <input
-                                id="username"
-                                className="input-text-field"
-                                type="text"
-                                name="username"
-                                placeholder="Användarnamn"
-                                value={username}
-                                onChange={(e) => { setUsername(e.target.value) }}
-                                required
-                            />
-                            <label htmlFor='password'></label>
-                            <input
-                                id="password"
-                                className="input-text-field"
-                                type="password"
-                                name="password"
-                                placeholder="Lösenord (minst 8 tecken)"
-                                onChange={(e) => { setPassword(e.target.value) }}
-                                required
-                            />
-                            <label htmlFor='repeat-password'></label>
-                            <input
-                                id="repeat-password"
-                                className="input-text-field"
-                                type="password"
-                                name="repeat-password"
-                                placeholder="Upprepa lösenord"
-                                value={repeatedPassword}
-                                onChange={(e) => {setRepeatedPassword(e.target.value)}}
-                                required
-                            />
-                            <input type="submit" value="REGISTRERA" />
-                        </form>
-                        <p>Redan medlem? <span className="register"><Link href="/">Logga in här</Link></span></p>
-                        <p className={success ? 'success-message' : 'error-message'} >{message}</p>
+            <main className="flex-1 flex justify-center items-center">
+                <div className="w-full max-w-md bg-white bg-opacity-80 p-6 rounded-lg shadow-xl">
+                    <div className="relative mb-6">
+                        <h2 className="text-3xl font-semibold text-[#FE846D] text-center mb-4">
+                            Skapa konto
+                        </h2>
+                        <img src="../../images/road.jpg" alt="road image" className="w-full h-64 object-cover rounded-t-lg" />
                     </div>
+
+                    <form onSubmit={handleRegister} className="space-y-4">
+                        <input
+                            id="username"
+                            className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="text"
+                            name="username"
+                            placeholder="Användarnamn"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                        <input
+                            id="password"
+                            className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="password"
+                            name="password"
+                            placeholder="Lösenord (minst 8 tecken)"
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <input
+                            id="repeat-password"
+                            className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="password"
+                            name="repeat-password"
+                            placeholder="Upprepa lösenord"
+                            value={repeatedPassword}
+                            onChange={(e) => setRepeatedPassword(e.target.value)}
+                            required
+                        />
+                        <button
+                            type="submit"
+                            className="w-full py-3 bg-[#FE846D] text-white font-bold rounded-lg hover:bg-[#FE846D] transition-colors"
+                        >
+                            REGISTRERA
+                        </button>
+                    </form>
+
+                    <p className="text-gray-600 mt-4">
+                        Redan medlem? <span className="text-[#FE846D] hover:underline"><Link href="/">Logga in här</Link></span>
+                    </p>
+                    <p className={success ? 'text-green-600' : 'text-red-600'}>{message}</p>
                 </div>
             </main>
             <Footer />
         </div>
-    )
+    );
 }
