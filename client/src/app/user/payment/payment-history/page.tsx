@@ -17,41 +17,57 @@ import {
     TableCell
 } from "@nextui-org/table";
 
-export default function TransactionLog() {
+export default function PaymentHistory() {
     const user_id = localStorage.getItem("user_id");
 
-    const [transactions, setTransactions] = useState([]);
+    const [paymentHistory, setPaymentHistory] = useState([]);
 
     tokenExpired();
 
     const columns = [
         {
-            key: "amount",
-            label: "SUMMA",
+            key: "current_debt",
+            label: "SKULD",
         },
         {
-            key: "note",
-            label: "NOTERING",
+            key: "monthly_debt",
+            label: "MÅNADSSKULD",
         },
         {
-            key: "timestamp",
-            label: "TIDSSTÄMPEL",
+            key: "monthly_paid",
+            label: "BETALT DEN HÄR MÅNADEN",
+        },
+        {
+            key: "balance_before",
+            label: "SALDO FÖRE",
+        },
+        {
+            key: "balance_after",
+            label: "SALDO EFTER",
+        },
+        {
+            key: "date",
+            label: "DATUM",
         },
         {
             key: "transaction_type",
-            label: "TRANSAKTIONSTYP",
+            label: "TRANSAKTIONSMETOD",
+        },
+        {
+            key: "notes",
+            label: "NOTERING",
         },
     ];
 
-    const getTransactions = () => {
+    const getPaymentHistory = () => {
         fetch(`http://localhost:1337/user/details/${user_id}`)
         .then(res => res.json())
-        .then(json => setTransactions(json.result.transaction_log))
+        .then(json => setPaymentHistory(json.result.payment_history))
         .catch((error) => console.log(error))
     }
 
     useEffect(() => {
-        getTransactions();
+        getPaymentHistory();
 
     }, []);
 
@@ -59,7 +75,7 @@ export default function TransactionLog() {
         <div>
             <UserHeader />
             <main>
-            <h2 className='text-2xl font-semibold'>Transaktionslogg</h2>
+            <h2 className='text-2xl font-semibold'>Betalningshistorik</h2>
             <Link href="/user/payment">
                 <button className="blue-btn">Gå tillbaka</button>
             </Link>
@@ -68,15 +84,19 @@ export default function TransactionLog() {
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
                 <TableBody>
-                    {transactions.map((data, i) => (
+                    {paymentHistory.map((data, i) => (
                         <TableRow
                             key={i}
                             className="row"
                         >
-                            <TableCell>{data.amount_increased}</TableCell>
-                            <TableCell>{data.notes}</TableCell>
+                            <TableCell>{data.current_debt}</TableCell>
+                            <TableCell>{data.monthly_debt}</TableCell>
+                            <TableCell>{data.monthly_debt_paid}</TableCell>
+                            <TableCell>{data.prepaid_balance_before}</TableCell>
+                            <TableCell>{data.prepaid_balance_after}</TableCell>
                             <TableCell>{data.timestamp}</TableCell>
                             <TableCell>{data.transaction_type}</TableCell>
+                            <TableCell>{data.notes}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

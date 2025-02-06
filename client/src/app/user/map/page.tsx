@@ -225,6 +225,8 @@ export default function UserMap() {
                                     </button>
                                 ) : suspended ? (
                                     <p className="text-xl">Uthyrning ej tillgänglig</p>
+                                ) : bike.disabled ? (
+                                    <p className="text-xl">Cykeln är ur bruk</p>
                                 ) : (
                                     <button className="text-xl" onClick={() => handleStart(bike._id, bike.current_location.latitude, bike.current_location.longitude)}>
                                     Lås upp cykel 🛴

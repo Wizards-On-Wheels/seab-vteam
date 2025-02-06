@@ -30,23 +30,11 @@ export default function UserPage() {
     }
 
     useEffect(() => {
-        getUserDetails();
+        if (localStorage.getItem("oauth") !== "true") {
+            getUserDetails();
+        }
 
     }, []);
-
-    // TA BORT DEN HÄR
-    const createBikes = async () => {
-        const cities = ["Göteborg", "Stockholm", "Karlskrona"];
-
-        for (let i=0; i < 100; i++) {
-            let randNr = Math.floor(Math.random() * 3);
-
-            const response = await axios.post("http://localhost:1337/admin/createBike", {
-                city: cities[randNr]
-            })
-            console.log(response)
-        }
-    }
 
     const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -71,7 +59,7 @@ export default function UserPage() {
 
     if (!token) {
         return (
-            window.location.href = "/user/login"
+            window.location.href = "/"
         )
     }
 
@@ -79,7 +67,6 @@ export default function UserPage() {
         <div>
             <UserHeader />
             <main>
-                <button onClick={createBikes}>Create bikes</button>
                 <h2 className='text-2xl font-semibold'>Mina sidor</h2>
                 <p className="error-message">{message}</p>
                 <div className="user-div" >
