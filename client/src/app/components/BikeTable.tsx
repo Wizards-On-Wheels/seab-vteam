@@ -139,7 +139,8 @@ export default function BikeTable({ data }: BikeTableProps) {
 
   const handleBikeMoved = async (latitude: number, longitude: number) => {
     try {
-      const response = await fetch(
+      // Move the bike
+      const moveResponse = await fetch(
         `http://localhost:1337/bike/${selectedBikeId}/position/${longitude}/${latitude}`,
         {
           method: "PUT",
@@ -148,25 +149,42 @@ export default function BikeTable({ data }: BikeTableProps) {
           },
         }
       );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+  
+      if (!moveResponse.ok) {
+        throw new Error(`Failed to move bike! Status: ${moveResponse.status}`);
       }
-
+  
+      // Charge the battery to 100%
+      const chargeResponse = await fetch(
+        `http://localhost:1337/bike/battery/increase/100/${selectedBikeId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      if (!chargeResponse.ok) {
+        throw new Error(`Failed to charge bike! Status: ${chargeResponse.status}`);
+      }
+  
+      // Update state with new location and battery level
       setSortedData((prevData) =>
         prevData.map((bike) =>
           bike.id === selectedBikeId
-            ? { ...bike, current_location: `${latitude}, ${longitude}` }
+            ? { ...bike, current_location: `${latitude}, ${longitude}`, battery: 100 }
             : bike
         )
       );
-
-      alert(`Bike ${selectedBikeId} has been moved.`);
+  
+      alert(`Bike ${selectedBikeId} has been moved and fully charged.`);
     } catch (error) {
-      console.error("Error moving bike:", error);
-      alert("Failed to move the bike. Please try again.");
+      console.error("Error moving and charging bike:", error);
+      alert("Failed to move and charge the bike. Please try again.");
     }
   };
+  
 
   const filteredData = sortedData.filter((bike) =>
     bike.id.toLowerCase().includes(searchQuery)
