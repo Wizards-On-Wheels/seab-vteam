@@ -32,6 +32,45 @@ export default function UserMap() {
 
     const socket = useRef(null);
 
+    const [nrOfBikes, setNrOfBikes] = useState({
+        "Göteborg C": 0,
+        "Avenyn": 0,
+        "Haga": 0,
+        "Odenplan": 0,
+        "Centralstation": 0,
+        "Gamla Stan": 0,
+        "Blekinge Museum": 0,
+        "Stortorget": 0,
+        "Fortifikationsgatan": 0
+    });
+
+    const countBikes = async () => {
+        const response = await fetch("http://localhost:1337/admin/collections/bikes/data");
+        const data = await response.json();
+
+        for (const item of data) {
+            if (item.current_location.latitude === 57.7089) {
+                setNrOfBikes(nrOfBikes => ({...nrOfBikes, "Göteborg C":nrOfBikes["Göteborg C"]+1}));
+            } else if (item.current_location.latitude === 57.7072) {
+                setNrOfBikes(nrOfBikes => ({...nrOfBikes, "Avenyn":nrOfBikes["Avenyn"]+1}));
+            } else if (item.current_location.latitude === 57.7058) {
+                setNrOfBikes(nrOfBikes => ({...nrOfBikes, "Haga":nrOfBikes["Haga"]+1}));
+            } else if (item.current_location.latitude === 59.3428) {
+                setNrOfBikes(nrOfBikes => ({...nrOfBikes, "Odenplan":nrOfBikes["Odenplan"]+1}));
+            } else if (item.current_location.latitude === 59.3293) {
+                setNrOfBikes(nrOfBikes => ({...nrOfBikes, "Centralstation":nrOfBikes["Centralstation"]+1}));
+            } else if (item.current_location.latitude === 59.3328) {
+                setNrOfBikes(nrOfBikes => ({...nrOfBikes, "Gamla Stan":nrOfBikes["Gamla Stan"]+1}));
+            } else if (item.current_location.latitude === 56.1624) {
+                setNrOfBikes(nrOfBikes => ({...nrOfBikes, "Blekinge Museum":nrOfBikes["Blekinge Museum"]+1}));
+            } else if (item.current_location.latitude === 56.1612) {
+                setNrOfBikes(nrOfBikes => ({...nrOfBikes, "Stortorget":nrOfBikes["Stortorget"]+1}));
+            } else if (item.current_location.latitude === 56.1608) {
+                setNrOfBikes(nrOfBikes => ({...nrOfBikes, "Fortifikationsgatan":nrOfBikes["Fortifikationsgatan"]+1}));
+            }
+        }
+    }
+
     const getParkingZones = async () => {
         fetch(`http://localhost:1337/admin/collections/cities/data`)
         .then(res => res.json())
@@ -50,6 +89,7 @@ export default function UserMap() {
     useEffect(() => {
         getParkingZones();
         getUserDetails();
+        countBikes();
 
     }, []);
 
@@ -194,6 +234,8 @@ export default function UserMap() {
                                 <Popup>
                                     <strong>Parkingsplats:</strong> {location.address}
                                     <br />
+                                    Antal cyklar: {nrOfBikes[location.address]}
+                                    <br />
                                     Status: {location.status}
                                     <br />
                                     Registrerad: {location.registered}
@@ -212,7 +254,7 @@ export default function UserMap() {
                             <div className="flex items-center gap-2">
                                 Battery: {bike.battery}%
                                 {bike.battery > 75 ?  <img className="w-8"src="/images/batteryFull.png" alt="Full Battery" /> 
-                                : bike.battery > 50 ? <img className="w-8"src="/images/batteryAlmostFull.png" alt="Almost full Battery" /> 
+                                : bike.battery >= 50 ? <img className="w-8"src="/images/batteryAlmostFull.png" alt="Almost full Battery" /> 
                                 : <img className="w-8"src="/images/batteryEmpty.png" alt="Almost empty" /> }
                             </div>
                             <div className='flex flex-col items-center justify-center gap-4 w-60 h-27 bg-brown-dark py-4 hover:bg-brown-light text-white transition-all rounded-lg'>
@@ -228,6 +270,8 @@ export default function UserMap() {
                                     <p className="text-xl">Uthyrning ej tillgänglig</p>
                                 ) : bike.disabled ? (
                                     <p className="text-xl">Cykeln är ur bruk</p>
+                                ) : bike.battery < 10 ? (
+                                    <p className="text-xl">Cykeln behöver laddas</p>
                                 ) : (
                                     <button className="text-xl" onClick={() => handleStart(bike._id, bike.current_location.latitude, bike.current_location.longitude)}>
                                     Lås upp cykel 🛴
