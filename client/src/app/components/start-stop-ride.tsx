@@ -5,11 +5,18 @@ export const StartBike = async ( userId: string, bikeId: string) => {
         });
         if (!response.ok) {
             throw new Error(`Failed to start bike. Status: ${response.status}`);
-        }else {
-            // console.log("Bike started successfully");
+        } else {
+            try {
+                await fetch(`http://localhost:1337/bike/battery/decrease/10/${bikeId}`, {
+                    method: "PUT",
+                });
+            } catch (error) {
+                console.error(error)
+            }
+
             return response.status
         }
-       
+
     } catch (error) {
         console.error("Error starting the bike:", error);
         console.log(bikeId)
@@ -23,7 +30,7 @@ export const StopBike = async ( userId: string, bikeId: string) => {
         });
         if (!response.ok) {
             throw new Error(`Failed to stop bike. Status: ${response.status}`);
-        }else {
+        } else {
             // console.log("Bike stopped successfully");
             return response.status
         }
@@ -40,7 +47,7 @@ export const GetParkingZones = async () => {
         });
         if (!response.ok) {
             throw new Error(`Failed to get cities data: ${response.status}`);
-        }else {
+        } else {
             // console.log("We got the citie data less go");
             return response.json();
         }
