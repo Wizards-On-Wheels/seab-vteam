@@ -23,7 +23,7 @@ export function tokenExpired() {
         });
 
         localStorage.clear();
-        window.location.href = "/user/login";
+        window.location.href = "/";
     }
 
     useEffect(() => {
@@ -33,7 +33,7 @@ export function tokenExpired() {
                 signOut(localStorage.getItem("email"));
             }
         } else {
-            window.location.href = "/user/login";
+            window.location.href = "/";
         }
     }, []);
 }
