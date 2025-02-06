@@ -79,6 +79,8 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
   const [parkingZones, setParkingZones] = useState<CityProps["cities"]>([]);
   const mapRef = useRef<L.Map | null>(null); // Reference to the Leaflet map instance
   const [ridingBikeId, setRidingBikeId] = useState<string | undefined>(undefined);
+
+  
   
   const handleStart = async (bikeId: string) => {
     const userId = localStorage.getItem("user_id") || "";
@@ -133,25 +135,49 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
     }
   }, []);
 
+  const groupBikesByLocation = (bikes) => {
+    const locationMap = {};
+  
+    bikes.forEach((bike) => {
+      const [lat, lng] = bike.current_location.split(",").map((coord) => coord.trim());
+      const key = `${lat},${lng}`;
+  
+      if (!locationMap[key]) {
+        locationMap[key] = [];
+      }
+      locationMap[key].push(bike);
+    });
+  
+    return locationMap;
+  };
+
+  const groupedBikes = groupBikesByLocation(bikes);
+  
+
   useEffect(() => {
     // Cleanup map instance using the container method
     const container = L.DomUtil.get("map");
     if (container) {
       container._leaflet_id = null; // Remove the _leaflet_id to effectively destroy the map instance
-      // console.log("Map instance cleaned up using L.DomUtil.get");
     }
 
     return () => {
-      // Cleanup logic on component unmount
+      // Cleanup logic on component closing
       const container = L.DomUtil.get("map");
       if (container) {
         container._leaflet_id = null;
-        // console.log("Map instance cleaned up on unmount using L.DomUtil.get");
       }
     };
-  }, [bikes]); // Trigger cleanup whenever bikes data changes
+  }, [bikes]);
 
-
+  // const createBikeCountIcon = (count) => {
+  //   return L.divIcon({
+  //     className: "bike-count-icon",
+  //     html: `<div class="bike-count-circle">${count}</div>`,
+  //     iconSize: [30, 30], // Size of the circle
+  //     iconAnchor: [15, -10], // Adjust position relative to the parking marker
+  //   });
+  // };
   
   return (
     <div className="w-full h-[100vh] rounded-lg overflow-hidden shadow-md z-30 fixed">
@@ -184,6 +210,9 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
             const radius = 40; 
             const circleOptions = { color: 'steelblue', fillColor: 'blue', fillOpacity: 0.1 };
 
+            const bikesAtLocation = groupedBikes[`${lat},${lng}`] || [];
+            const numberOfBikesAtLocation = bikesAtLocation.length;
+        
             if (!isNaN(lat) && !isNaN(lng) && !location.charging_station) {
               return (
                 <React.Fragment key={index}>
@@ -192,12 +221,15 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
                       <strong>Parking Location:</strong> {location.address}
                       <br />
                       Status: {location.status}
+                      Bikes: {numberOfBikesAtLocation}
                     </Popup>
                   </Marker>
                   <Circle center={position} radius={radius} pathOptions={circleOptions} />
                 </React.Fragment>
               );
             } else if (!isNaN(lat) && !isNaN(lng)) {
+              const bikesAtLocation = groupedBikes[`${lat},${lng}`] || [];
+              const numberOfBikesAtLocation = bikesAtLocation.length;
               return (
                 <React.Fragment key={index}>
                   <Marker position={position} icon={customParkingAndCargingIcon}>
@@ -207,9 +239,11 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
                       Status: {location.status}
                       <br />
                       Registered: {location.registered}
+                      <br />
+                      Bikes: {numberOfBikesAtLocation}
                     </Popup>
-                  </Marker>
-                  <Circle center={position} radius={radius} pathOptions={circleOptions} />
+                  </Marker> 
+                    <Circle center={position} radius={radius} pathOptions={circleOptions} />
                 </React.Fragment>
               );
             } else {
@@ -218,18 +252,20 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
             }
           })
         )}
-                {/* Displaying some bikes on the map  */}
-                {bikes.map((bike) => {
+        {/* Displaying some bikes on the map  */}
+        {bikes.map((bike) => {   
           const locationArray = bike.current_location.split(",");
           // Check if the location is valid before using it
           if (locationArray.length === 2) {
+            const locationArray = bike.current_location.split(",").map((coord) => coord.trim());
             const lat = parseFloat(locationArray[0]);
             const lng = parseFloat(locationArray[1]);
 
             // Only render the marker if the coordinates are valid
             if (!isNaN(lat) && !isNaN(lng) && bike.status == "available") {
+              
               return (
-                <Marker key={bike.id} position={[lat, lng]} icon={customIcon}>
+                <Marker key={bike.id} position={[lat, lng]} icon={customIcon} zIndexOffset={1000}>
                   <Popup>
                     <strong>Bike ID: {bike.id}</strong>
                     {/* Status: {bike.status} */}
@@ -262,12 +298,12 @@ const BikeMap: React.FC<BikeProps> = ({ bikes }) => {
                 </Marker>
               );
             } else {
-              // console.warn(`Invalid coordinates for bike ${bike.id}: ${bike.current_location}`);
+              console.warn(`Invalid coordinates for bike ${bike.id}: ${bike.current_location}`);
               return null; // Return nothing for invalid data
             }
           } else {
-            // console.warn(`Invalid location format for bike ${bike.id}: ${bike.current_location}`);
-            return null; // Return nothing if the format is incorrect
+            console.warn(`Invalid location format for bike ${bike.id}: ${bike.current_location}`);
+            return null; 
           }
         })}
       </MapContainer>

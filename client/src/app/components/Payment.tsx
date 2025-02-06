@@ -86,7 +86,7 @@ const CartMenu: React.FC<ItemsInCart> = ({ cartItems, increaseAmount, decreaseAm
                    
                   <div className="pt-5">
                   <a
-                    href="/ride" 
+                    href="/mobileapp/ride" 
                     className=" text-xxl menu-open rounded-full pt-3 pb-3 pl-20 pr-20 hover:text-black"
                   >
                     Take my money!

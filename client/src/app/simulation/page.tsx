@@ -18,7 +18,6 @@ export default function MapSimulator() {
     const [users, setUsers] = useState([]);
     const [routes, setRoutes] = useState([]);
     const [cities, setCities] = useState([]);
-
     const [nrOfBikes, setNrOfBikes] = useState({
         "Göteborg C": 0,
         "Avenyn": 0,
@@ -148,14 +147,17 @@ export default function MapSimulator() {
 
             socket.current.emit("content", data);
             i += 2;
-        }, 1200);
+        }, 1500);
     }
 
     const startSimulation = () => {
         const userIDs = users.map(user => user._id);
         const allRentals = []; // Used for simulation
         const userBikePairs = []; // Used for making all API calls at the same time
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         for (let i = 0; i < 200; i++) {
             const user = userIDs[i];
             const bike = bikes[i];
@@ -171,11 +173,18 @@ export default function MapSimulator() {
 
                 // Calculate latitude difference since it differs
                 const diff = Math.abs(bike.current_location.latitude - latitude);
-
                 if (diff < 0.0004) {
+<<<<<<< Updated upstream
                     // route = routes[bike.city][j][i];
                     route = routes[bike.city][j][0];
                     routes[bike.city][j].shift();
+=======
+                    route = routes[bike.city][j][0];
+                    console.log("Route: ", routes[bike.city][j][0]);
+                    routes[bike.city][j].shift();
+                    console.log("Next route: ", routes[bike.city][j][0]);
+                    
+>>>>>>> Stashed changes
                 }
             }
 
@@ -208,6 +217,7 @@ export default function MapSimulator() {
     }
 
     const stopAllRides = async () => {
+        console.log("STOP ALL RIDES, its just taking a while")
         const response = await axios.put(`http://localhost:1337/test/stopAllRides`);
         console.log(response)
     }
