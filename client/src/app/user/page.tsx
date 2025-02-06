@@ -17,12 +17,11 @@ export default function UserPage() {
 
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
-    const user_id = localStorage.getItem("user_id");
 
     const [message, setMessage] = useState("");
 
     const getUserDetails = async () => {
-        const response = await axios.get(`http://localhost:1337/user/details/${user_id}`);
+        const response = await axios.get(`http://localhost:1337/user/details/${email}`);
 
         if (response.data.result.account_suspended) {
             setMessage(`Ditt konto är för närvarande avstängt. Detta kan t ex bero på att du har obetalda fakturor. Kontakta kundservice för mer information!`)

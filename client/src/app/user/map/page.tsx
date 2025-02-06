@@ -15,6 +15,7 @@ import '../user.css';
 export default function UserMap() {
     const api_key="5b3ce3597851110001cf624867c121a4001444dcbafd925164cfb40e";
     const userID = localStorage.getItem("user_id");
+    const email = localStorage.getItem("email");
 
     const [startPosition, setStartPosition] = useState("");
     const [stopPosition, setStopPosition] = useState("");
@@ -39,7 +40,7 @@ export default function UserMap() {
     }
 
     const getUserDetails = async () => {
-        const response = await axios.get(`http://localhost:1337/user/details/${userID}`);
+        const response = await axios.get(`http://localhost:1337/user/details/${email}`);
 
         if (response.data.result.account_suspended) {
             setSuspended(true);

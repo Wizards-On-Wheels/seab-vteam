@@ -18,7 +18,7 @@ import {
 export default function RentalHistory() {
     tokenExpired();
 
-    const user_id = localStorage.getItem("user_id");
+    const email = localStorage.getItem("email");
 
     const [rentals, setRentals] = useState([]);
 
@@ -50,7 +50,7 @@ export default function RentalHistory() {
     ];
 
     const getRentals = () => {
-        fetch(`http://localhost:1337/user/details/${user_id}`)
+        fetch(`http://localhost:1337/user/details/${email}`)
         .then(res => res.json())
         .then(json => setRentals(json.result.ride_log))
         .catch((error) => console.log(error))
@@ -58,7 +58,7 @@ export default function RentalHistory() {
 
     useEffect(() => {
         getRentals();
-        // eslint-disable-next-line
+
     }, []);
 
 

@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react'
-import Link from 'next/link';
+import React, { useState } from 'react'
 import axios from 'axios';
 import Footer from '../../components/Footer';
 import UserHeader from '../../components/UserHeader';
@@ -15,22 +14,10 @@ export default function Profile() {
 
     const [password, setPassword] = useState("");
     const [repeatedPassword, setRepeatedPassword] = useState("");
-
     const [message, setMessage] = useState("");
-
     const [success, setSuccess] = useState(false);
 
     tokenExpired();
-
-    // This function is used when updating username
-    // const getUserDetails = async () => {
-    //     const details = await axios.get(`http://localhost:1337/user/details/${email}`);
-    // }
-
-    // useEffect(() => {
-    //     console.log(email)
-    //     getUserDetails();
-    // }, []);
 
     const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -59,7 +46,7 @@ export default function Profile() {
         <div>
             <UserHeader />
             <main>
-                {localStorage.getItem("oauth") === "true" &&
+                {oauth === "true" &&
                     <p>Sidan är inaktiv eftersom du är inloggad med Github</p>
                 }
                 {localStorage.getItem("oauth") !== "true" &&

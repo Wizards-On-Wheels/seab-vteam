@@ -45,8 +45,7 @@ export default function Payment() {
     tokenExpired();
 
     const getUserDetails = async () => {
-        const response = await axios.get(`http://localhost:1337/user/details/${user_id}`);
-        console.log(response.data.result)
+        const response = await axios.get(`http://localhost:1337/user/details/${email}`);
 
         setBalance(response.data.result.prepaid_balance);
         setDebt(response.data.result.monthly_debt);

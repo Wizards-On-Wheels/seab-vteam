@@ -18,7 +18,7 @@ import {
 } from "@nextui-org/table";
 
 export default function PaymentHistory() {
-    const user_id = localStorage.getItem("user_id");
+    const email = localStorage.getItem("email");
 
     const [paymentHistory, setPaymentHistory] = useState([]);
 
@@ -60,7 +60,7 @@ export default function PaymentHistory() {
     ];
 
     const getPaymentHistory = () => {
-        fetch(`http://localhost:1337/user/details/${user_id}`)
+        fetch(`http://localhost:1337/user/details/${email}`)
         .then(res => res.json())
         .then(json => setPaymentHistory(json.result.payment_history))
         .catch((error) => console.log(error))

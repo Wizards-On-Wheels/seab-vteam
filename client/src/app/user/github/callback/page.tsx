@@ -66,7 +66,7 @@ export default function GitHubCallback() {
         if (codeParam && (localStorage.getItem("token") === null)) {
             getAccessToken(codeParam);
         }
-        // eslint-disable-next-line
+
     }, []);
 
     return <div>Processing GitHub login...</div>;

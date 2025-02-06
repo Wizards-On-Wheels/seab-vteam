@@ -18,7 +18,7 @@ import {
 } from "@nextui-org/table";
 
 export default function TransactionLog() {
-    const user_id = localStorage.getItem("user_id");
+    const email = localStorage.getItem("email");
 
     const [transactions, setTransactions] = useState([]);
 
@@ -44,7 +44,7 @@ export default function TransactionLog() {
     ];
 
     const getTransactions = () => {
-        fetch(`http://localhost:1337/user/details/${user_id}`)
+        fetch(`http://localhost:1337/user/details/${email}`)
         .then(res => res.json())
         .then(json => setTransactions(json.result.transaction_log))
         .catch((error) => console.log(error))
