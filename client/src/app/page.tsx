@@ -5,7 +5,6 @@ import Link from 'next/link';
 import axios from 'axios';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import './login.css';
 
 const loginWithGitHub = () => {
     const clientID = 'Ov23liHp0pUfQ61a3M77';
@@ -66,49 +65,66 @@ export default function Home() {
     };
 
     return (
-        <div>
+        <div
+            className="min-h-screen flex flex-col justify-between bg-cover bg-center bg-no-repeat bg-fixed"
+            style={{ backgroundImage: "url('/images/admin-background.jpg')" }}
+        >
             <Header />
-            <main>
-                <div className='login-div'>
-                    <img src="../../images/road.jpg" alt="road image" ></img>
-                    <div className="login">
-                        <button onClick={loginWithGitHub} className="github_button" >
-                            <img src="../../images/github.png" alt="github logo" />
-                            Logga in med Github
-                        </button>
-                        <div className="my-4">
-                            <p>Eller</p>
-                        </div>
-                        <form onSubmit={handleSignIn} className="login-form">
-                            <label htmlFor='username'></label>
-                            <input
-                                id="username"
-                                className="input-text-field"
-                                type="text"
-                                name="username"
-                                placeholder="Användarnamn"
-                                value={email}
-                                onChange={(e) => { setEmail(e.target.value) }}
-                                required
-                            />
-                            <label htmlFor='password'></label>
-                            <input
-                                id="password"
-                                className="input-text-field"
-                                type="password"
-                                name="password"
-                                placeholder="Lösenord"
-                                onChange={(e) => { setPassword(e.target.value) }}
-                                required
-                            />
-                            <input type="submit" value="LOGGA IN" />
-                        </form>
-                        <p>Inte medlem än? <span className="register"><Link href="/user/register" >Registrera dig här</Link></span></p>
-                        <p className={success ? 'success-message' : 'error-message'} >{message}</p>
+            <main className="flex-1 flex justify-center items-center">
+                <div className="w-full max-w-md bg-white bg-opacity-80 p-6 rounded-lg shadow-xl">
+                    <div className="relative mb-6">
+                    <h2 className="text-3xl font-semibold text-[#FE846D] text-center mb-4">
+                Svenska Elsparkcyklar AB
+                    </h2>
+                        <img src="../../images/road.jpg" alt="road image" className="w-full h-64 object-cover rounded-t-lg" />
                     </div>
+
+                    <div className="text-center mb-6">
+                    <button
+                    onClick={loginWithGitHub}
+                      className="flex items-center justify-center gap-3 bg-gray-800 text-white py-3 px-6 rounded-lg w-full mb-4 hover:bg-gray-700 transition-colors"
+                    >
+                    <img src="../../images/github.png" alt="github logo" className="w-6 h-6 rounded-full" />
+                    Logga in med Github
+                    </button>
+                        <p className="my-4 text-gray-600">Eller</p>
+                    </div>
+
+                    <form onSubmit={handleSignIn} className="space-y-4">
+                        <input
+                            id="username"
+                            className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="text"
+                            name="username"
+                            placeholder="Användarnamn"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                        <input
+                            id="password"
+                            className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="password"
+                            name="password"
+                            placeholder="Lösenord"
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <button
+                            type="submit"
+                            className="w-full py-3 bg-[#FE846D] text-white font-bold rounded-lg hover:bg-[#FE946D] transition-colors"
+                        >
+                            LOGGA IN
+                        </button>
+                    </form>
+
+                    <p className="text-gray-600 mt-4">
+                        Inte medlem än? <span className="text-[#FE846D] hover:underline"><Link href="/user/register">Registrera dig här</Link></span>
+                    </p>
+                    <p className={success ? 'text-green-600' : 'text-red-600'}>{message}</p>
                 </div>
             </main>
             <Footer />
         </div>
-    )
+    );
 }

@@ -9,7 +9,7 @@ export default function Header() {
     return (
         <div className="header" >
             <Link href="/">
-                <h1>Svenska Elsparkcyklar AB</h1>
+                {/* <h1>Svenska Elsparkcyklar AB</h1> */}
             </Link>
         </div>
     )
