@@ -60,7 +60,7 @@ export default function AdminCyklar() {
       <div className="text-center mb-4">
         <Link href="/admin">
           <button className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-            Back
+            Tillbaka
           </button>
         </Link>
       </div>
