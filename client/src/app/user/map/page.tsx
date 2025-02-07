@@ -202,7 +202,7 @@ export default function UserMap() {
             socket.current.emit("single_content", data);
             i++;
 
-        }, 1000);
+        }, 1500);
     }
 
     useEffect(() => {
@@ -214,13 +214,12 @@ export default function UserMap() {
 
     return (
         <div className="w-full h-[100vh] rounded-lg overflow-hidden shadow-md z-30 fixed">
-            <button className="change-pwd-btn" onClick={() => handleStop("67a3173b6c1d4e48a0cfb184")}>Stop ride (den här knappen ska tas bort)</button>
             <MapContainer
                 id="map"
                 center={[56.162856, 15.586438]} // karlskrona
                 //center={[57.707445, 11.965957]} // göteborg
                 zoom={14}
-                style={{ height: "60%", width: "100%" }}
+                style={{ height: "65%", width: "100%" }}
                 scrollWheelZoom={true}
             >
                 <TileLayer
@@ -287,7 +286,7 @@ export default function UserMap() {
             {suspended ?
                 <div className="info-div" >
                     <h2 className="text-1xl font-semibold">Välkommen, {localStorage.getItem("email")}!</h2>
-                    <p className="error-message">Ditt konto är avstängt</p>
+                    <p className="error-message">Ditt konto är för närvarande avstängt</p>
                 </div>
                 :
                 <div className="info-div" >

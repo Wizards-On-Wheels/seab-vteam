@@ -71,8 +71,9 @@ export default function MapSimulator() {
 
     const getRoutes = async () => {
         try {
-            const response = await fetch("http://localhost:1337/test/allRoutes");
+            const response = await fetch("http://localhost:1337/simulation/allRoutes");
             const data = await response.json();
+            console.log("routes: ", data)
             setRoutes(data);
         } catch (error) {
             console.error("Error fetching users:", error);
@@ -155,7 +156,7 @@ export default function MapSimulator() {
         const allRentals = []; // Used for simulation
         const userBikePairs = []; // Used for making all API calls at the same time
 
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 2; i++) {
             const user = userIDs[i];
             const bike = bikes[i];
             const bikeID = bike._id;
@@ -171,7 +172,6 @@ export default function MapSimulator() {
                 // Calculate latitude difference since it differs
                 const diff = Math.abs(bike.current_location.latitude - latitude);
                 if (diff < 0.0004) {
-                    // route = routes[bike.city][j][i];
                     route = routes[bike.city][j][0];
                     routes[bike.city][j].shift();
                     route = routes[bike.city][j][0];
@@ -205,14 +205,13 @@ export default function MapSimulator() {
     };
 
     const moveBack = async () => {
-        await axios.put("http://localhost:1337/test/resetAll");
+        await axios.put("http://localhost:1337/simulation/resetAll");
 
         window.location.reload();
     }
 
     const stopAllRides = async () => {
-        console.log("STOP ALL RIDES, its just taking a while")
-        const response = await axios.put(`http://localhost:1337/test/stopAllRides`);
+        const response = await axios.put(`http://localhost:1337/simulation/stopAllRides`);
         console.log(response)
     }
 

@@ -30,7 +30,7 @@ export default function RouteGenerator() {
         }
 
         try {
-            await axios.post("http://localhost:1337/test/addjson", {
+            await axios.post("http://localhost:1337/simulation/addjson", {
                 data: data
             });
 
