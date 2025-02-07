@@ -27,7 +27,7 @@ const customParkingAndCargingIcon = new L.Icon({
 });
 
 const profileIcon = new L.Icon({
-  iconUrl: "/images/Profile.svg",
+  iconUrl: "/images/profile.svg",
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [0, -48],
