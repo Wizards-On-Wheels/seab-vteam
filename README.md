@@ -15,7 +15,7 @@ To start up the system, follow the steps below:
 docker pull emelieklund/vteam-client:1.0
 ```
 ```
-docker pull xxx
+docker pull anja22/vteams-backend
 ```
 6. Start the system by entering:
 ```

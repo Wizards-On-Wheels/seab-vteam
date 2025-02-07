@@ -3,7 +3,7 @@ networks:
 
 services:
   server:
-    image: "emelieklund/vteam-server:1.0"
+    image: "docker pull anja22/vteams-backend"
     container_name: "server"
     ports:
       - "1337:1337"
