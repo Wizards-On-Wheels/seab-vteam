@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import "leaflet/dist/leaflet.css";
 
 import RouteGenerator from '../../components/RouteGenerator';
@@ -8,7 +8,6 @@ import RouteGenerator from '../../components/RouteGenerator';
 export default function Route() {
     return (
         <>
-            {/* <MapTestNew /> */}
             <RouteGenerator />
         </>
     )

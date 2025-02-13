@@ -156,7 +156,7 @@ export default function MapSimulator() {
         const allRentals = []; // Used for simulation
         const userBikePairs = []; // Used for making all API calls at the same time
 
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 100; i++) {
             const user = userIDs[i];
             const bike = bikes[i];
             const bikeID = bike._id;
@@ -174,11 +174,6 @@ export default function MapSimulator() {
                 if (diff < 0.0004) {
                     route = routes[bike.city][j][0];
                     routes[bike.city][j].shift();
-                    route = routes[bike.city][j][0];
-                    console.log("Route: ", routes[bike.city][j][0]);
-                    routes[bike.city][j].shift();
-                    console.log("Next route: ", routes[bike.city][j][0]);
-                    
                 }
             }
 
