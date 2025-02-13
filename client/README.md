@@ -1,5 +1,7 @@
 # VTeam - Frontend repo
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Wizards-On-Wheels/seab-vteam/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Wizards-On-Wheels/seab-vteam/?branch=main)
+
 Start up system
 ---------------
 Either use Docker Compose (see README.md in main repo) or start client repo with ```npm run dev```
